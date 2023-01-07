@@ -1,6 +1,6 @@
 package com.example.toodle_server_springboot.service;
 
-import com.example.toodle_server_springboot.domain.UserAccount;
+import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.exception.CustomException;
 import com.example.toodle_server_springboot.exception.ErrorCode;

@@ -1,6 +1,6 @@
 package com.example.toodle_server_springboot.service;
 
-import com.example.toodle_server_springboot.domain.UserAccount;
+import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.exception.CustomException;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 
 @DisplayName("비즈니스 로직 - 사용자")
 @ExtendWith(MockitoExtension.class)

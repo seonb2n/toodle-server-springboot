@@ -1,6 +1,6 @@
 package com.example.toodle_server_springboot.dto;
 
-import com.example.toodle_server_springboot.domain.UserAccount;
+import com.example.toodle_server_springboot.domain.user.UserAccount;
 
 import java.time.LocalDateTime;
 
