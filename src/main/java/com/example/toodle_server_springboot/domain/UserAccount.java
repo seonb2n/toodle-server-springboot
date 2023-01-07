@@ -4,33 +4,42 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
 @ToString(callSuper = true)
 @Entity
+@Table(name = "user_account")
 public class UserAccount extends BaseEntity{
 
     @Id
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
 
-    @Setter private String email;
-    @Setter private String nickname;
-    @Setter private String password;
+    @Setter
+    @Column(name = "user_nickname")
+    private String nickname;
+
+    @Setter
+    @Column(name = "user_email")
+    private String email;
+
+    @Setter
+    @Column(name = "user_password")
+    private String password;
 
     protected UserAccount() {}
 
-    private UserAccount(String userId, String email, String nickname, String password) {
-        this.userId = userId;
+    private UserAccount(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
     }
 
-    public static UserAccount of(String userId, String email, String nickname, String password) {
-        return new UserAccount(userId, email, nickname, password);
+    public static UserAccount of(String email, String nickname, String password) {
+        return new UserAccount(email, nickname, password);
     }
 
     @Override
