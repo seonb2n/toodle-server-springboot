@@ -37,4 +37,18 @@ class UserAccountRepositoryTest {
                 .hasSizeGreaterThanOrEqualTo(1);
     }
 
+    @DisplayName("Email 을 통한 사용자 조회 test")
+    @Test
+    public void givenUserEmail_whenSearch_thenReturnUser() throws Exception {
+        //given
+        String userEmail = userAccountRepository.findById(1L).get().getEmail();
+
+        //when
+        var userEntity = userAccountRepository.findUserAccountByEmail(userEmail);
+
+        //then
+        assertThat(userEntity)
+                .isNotNull()
+                .isNotEmpty();
+    }
 }
