@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserAccountController {
 

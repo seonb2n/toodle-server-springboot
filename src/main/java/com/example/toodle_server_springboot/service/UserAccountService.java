@@ -24,12 +24,13 @@ public class UserAccountService {
      * @param userPassword
      * @return
      */
-    public UserAccountDto registerUser(String userEmail, String userNickname, String userPassword) {
+    public UserAccountDto registerUser(String userEmail, String userPassword, String userNickname) {
         var preUserAccount = userAccountRepository.findUserAccountByEmail(userEmail);
         if (preUserAccount.isPresent()) {
             // 이미 등록된 Email Exception 발생
             throw new CustomException(ErrorCode.INVALID_EMAIL_EXCEPTION);
         }
+        //todo 사용자 닉네임이 비어있으면 임의의 닉네임 부여하는 로직 추가!
         var userAccount = userAccountRepository.save(UserAccount.of(userEmail, userNickname, userPassword));
         return UserAccountDto.from(userAccountRepository.save(userAccount));
     }
