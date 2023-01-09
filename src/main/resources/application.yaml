@@ -1,0 +1,20 @@
+logging:
+  level:
+    com.fastcampus.projectboard: debug
+    org.springframework.web.servlet: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/toodle
+    username: postgres
+    password: 1234
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100
+  sql.init.mode: always
