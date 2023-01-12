@@ -20,12 +20,12 @@ public class UserAccount extends BaseEntity {
     private Long userId;
 
     @Setter
-    @Column(name = "user_nickname")
-    private String nickname;
-
-    @Setter
     @Column(name = "user_email")
     private String email;
+
+    @Setter
+    @Column(name = "user_nickname")
+    private String nickname;
 
     @Setter
     @Column(name = "user_password")
