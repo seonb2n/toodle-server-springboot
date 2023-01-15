@@ -40,7 +40,7 @@ public class UserAccountController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> authenticateUser(@RequestBody UserAccountAuthenticateRequest request) throws Exception{
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         var userDetails = jwtUserDetailsService.loadUserByUsername(request.email());
