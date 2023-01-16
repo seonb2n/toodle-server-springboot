@@ -50,6 +50,10 @@ public class PostIt extends BaseEntity {
         return new PostIt(content, userAccount, endTime, false);
     }
 
+    public static PostIt of(String content, UserAccount userAccount, LocalDateTime endTime, boolean isDone) {
+        return new PostIt(content, userAccount, endTime, isDone);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
