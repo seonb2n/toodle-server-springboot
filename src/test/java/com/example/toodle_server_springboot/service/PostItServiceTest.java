@@ -1,12 +1,22 @@
 package com.example.toodle_server_springboot.service;
 
+import com.example.toodle_server_springboot.domain.postIt.PostIt;
+import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.repository.PostItRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @DisplayName("비즈니스 로직 - 포스트잇")
 @ExtendWith(MockitoExtension.class)
@@ -16,10 +26,30 @@ class PostItServiceTest {
 
     @Mock private PostItRepository postItRepository;
 
-    @DisplayName("포스트잇 등록 테스트")
+    private static UserAccount userAccount;
+    private static String testEmail = "testEmail";
+    private static String testNickName = "testNickName";
+    private static String testPwd = "testPwd";
+
+    @BeforeEach
+    void init() {
+        userAccount = UserAccount.of(testEmail, testNickName, testPwd);
+    }
+
+    @DisplayName("포스트잇 등록 테스트공 - 성공")
     @Test
     void givenPostItRegisterRequest_whenRegisterPostIt_thenReturnPostItDto() {
+        //given
+        String content = "content";
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1L);
+        given(postItRepository.save(any(PostIt.class))).willReturn(PostIt.of(content, userAccount, tomorrow));
 
+        //when
+        var savedPostItDto = sut.registerPostIt(userAccount, content, tomorrow, false);
+
+        //then
+        verify(postItRepository).save(any(PostIt.class));
+        assertEquals(content, savedPostItDto.content());
     }
 
     @DisplayName("포스트잇 조회 테스트")
