@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +37,7 @@ class PostItServiceTest {
         userAccount = UserAccount.of(testEmail, testNickName, testPwd);
     }
 
-    @DisplayName("포스트잇 등록 테스트공 - 성공")
+    @DisplayName("포스트잇 등록 테스트 - 성공")
     @Test
     void givenPostItRegisterRequest_whenRegisterPostIt_thenReturnPostItDto() {
         //given
@@ -56,12 +57,13 @@ class PostItServiceTest {
     @Test
     void givenUserAccount_whenFindPostIT_thenReturnPostItDtoList() {
         //given
-
+        given(postItRepository.findAllByUserAccount(any(UserAccount.class))).willReturn(List.of());
 
         //when
+        var postItList = sut.getAllPostIt(userAccount);
 
         //then
-
+        verify(postItRepository).findAllByUserAccount(any(UserAccount.class));
     }
 
     @DisplayName("포스트잇 삭제 테스트")
