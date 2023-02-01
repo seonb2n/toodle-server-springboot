@@ -3,6 +3,7 @@ package com.example.toodle_server_springboot.service;
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.PostItDto;
+import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,21 +32,21 @@ public class PostItService {
 
     /**
      * 사용자 계정이 가진 모든 PostIt 을 찾는 서비스
-     * @param userAccount
+     * @param userAccountDto
      * @return
      */
-    public List<PostItDto> getAllPostIt(UserAccount userAccount) {
-        return postItRepository.findAllByUserAccount(userAccount).stream().map(PostItDto::from).toList();
+    public List<PostItDto> getAllPostIt(UserAccountDto userAccountDto) {
+        return postItRepository.findAllByUserAccount(userAccountDto.toEntity()).stream().map(PostItDto::from).toList();
     }
 
     /**
      * 수정된 포스트잇 리스트로 업데이트
      * @param postItDtoLIst
-     * @param userAccount
+     * @param userAccountDto
      * @return
      */
-    public List<PostItDto> updatePostIt(List<PostItDto> postItDtoLIst, UserAccount userAccount) {
-        var postItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccount)).toList();
+    public List<PostItDto> updatePostIt(List<PostItDto> postItDtoLIst, UserAccountDto userAccountDto) {
+        var postItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccountDto.toEntity())).toList();
         return postItRepository.saveAll(postItList).stream().map(PostItDto::from).toList();
     }
 }

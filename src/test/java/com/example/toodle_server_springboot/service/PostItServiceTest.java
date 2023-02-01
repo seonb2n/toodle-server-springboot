@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
+import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +61,7 @@ class PostItServiceTest {
         given(postItRepository.findAllByUserAccount(any(UserAccount.class))).willReturn(List.of());
 
         //when
-        var postItList = sut.getAllPostIt(userAccount);
+        var postItList = sut.getAllPostIt(UserAccountDto.from(userAccount));
 
         //then
         verify(postItRepository).findAllByUserAccount(any(UserAccount.class));
