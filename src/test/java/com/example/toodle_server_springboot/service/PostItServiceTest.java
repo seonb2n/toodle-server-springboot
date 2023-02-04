@@ -58,22 +58,28 @@ class PostItServiceTest {
     @Test
     void givenUserAccount_whenFindPostIT_thenReturnPostItDtoList() {
         //given
-        given(postItRepository.findAllByUserAccount(any(UserAccount.class))).willReturn(List.of());
+        PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
+        PostIt testPostIt2 = PostIt.of("test2", userAccount, LocalDateTime.now());
+        given(postItRepository.findAllByUserAccount(userAccount)).willReturn(List.of(testPostIt1, testPostIt2));
 
         //when
         var postItList = sut.getAllPostIt(UserAccountDto.from(userAccount));
 
         //then
         verify(postItRepository).findAllByUserAccount(any(UserAccount.class));
+        assertEquals(2, postItList.size());
     }
 
     @DisplayName("포스트잇 삭제 테스트")
     @Test
     void givenPostItDeleteRequest_whenDeletePostIt_thenReturnPostItDto() {
         //given
-
+        PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
+        PostIt testPostIt2 = PostIt.of("test2", userAccount, LocalDateTime.now());
 
         //when
+
+
 
         //then
 

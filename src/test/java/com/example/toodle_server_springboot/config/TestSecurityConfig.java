@@ -1,13 +1,10 @@
 package com.example.toodle_server_springboot.config;
 
-import com.example.toodle_server_springboot.config.security.JwtAuthenticationEntryPoint;
-import com.example.toodle_server_springboot.config.security.SecurityConfig;
+import com.example.toodle_server_springboot.config.security.*;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.util.Optional;
@@ -15,17 +12,11 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-@Import({SecurityConfig.class, JwtAuthenticationEntryPoint.class})
+@Import({SecurityConfig.class, JwtAuthenticationEntryPoint.class, JwtRequestFilter.class, JwtTokenUtil.class, JwtUserDetailsService.class})
 public class TestSecurityConfig {
 
     @MockBean
     private UserAccountService userAccountService;
-
-    @MockBean
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     /**
      * 인증된 사용자 권한 부여
