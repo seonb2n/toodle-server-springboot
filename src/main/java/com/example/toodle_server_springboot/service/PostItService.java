@@ -36,7 +36,7 @@ public class PostItService {
      * @return
      */
     public List<PostItDto> getAllPostIt(UserAccountDto userAccountDto) {
-        return postItRepository.findAllByUserAccount(userAccountDto.toEntity()).stream().map(PostItDto::from).toList();
+        return postItRepository.findAllByUserAccount_Email(userAccountDto.email()).stream().map(PostItDto::from).toList();
     }
 
     /**

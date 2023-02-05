@@ -60,13 +60,13 @@ class PostItServiceTest {
         //given
         PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
         PostIt testPostIt2 = PostIt.of("test2", userAccount, LocalDateTime.now());
-        given(postItRepository.findAllByUserAccount(userAccount)).willReturn(List.of(testPostIt1, testPostIt2));
+        given(postItRepository.findAllByUserAccount_Email(userAccount.getEmail())).willReturn(List.of(testPostIt1, testPostIt2));
 
         //when
         var postItList = sut.getAllPostIt(UserAccountDto.from(userAccount));
 
         //then
-        verify(postItRepository).findAllByUserAccount(any(UserAccount.class));
+        verify(postItRepository).findAllByUserAccount_Email(any());
         assertEquals(2, postItList.size());
     }
 
