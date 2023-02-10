@@ -71,7 +71,7 @@ class PostItServiceTest {
         assertEquals(2, postItList.size());
     }
 
-    @DisplayName("포스트잇 업데이트 테스트")
+    @DisplayName("포스트잇 업데이트 로직 테스트")
     @Test
     void givenPostItDeleteRequest_whenUpdatePostIt_thenReturnPostItDtoList() {
         //given

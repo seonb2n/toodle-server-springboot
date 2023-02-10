@@ -47,6 +47,7 @@ public class PostItService {
      */
     public List<PostItDto> updatePostIt(List<PostItDto> postItDtoLIst, UserAccountDto userAccountDto) {
         var postItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccountDto.toEntity())).toList();
+        //todo 서버의 postIt과 비교해서 삭제된 postIt 은 삭제처리를 해줘야 한다.
         return postItRepository.saveAll(postItList).stream().map(PostItDto::from).toList();
     }
 }
