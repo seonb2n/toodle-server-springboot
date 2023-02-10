@@ -30,6 +30,12 @@ public class PostItController {
         return ResponseEntity.ok(postItDtoList);
     }
 
+    /**
+     * 사용자의 포스트잇을 서버에 저장한다.
+     * @param postItDtoList
+     * @param userPrincipal
+     * @return
+     */
     @PostMapping("/update")
     public ResponseEntity<List<PostItDto>> updateAllPostIt(
             @RequestBody List<PostItDto> postItDtoList,

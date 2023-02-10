@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
+import com.example.toodle_server_springboot.dto.PostItDto;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,30 +71,18 @@ class PostItServiceTest {
         assertEquals(2, postItList.size());
     }
 
-    @DisplayName("포스트잇 삭제 테스트")
+    @DisplayName("포스트잇 업데이트 테스트")
     @Test
-    void givenPostItDeleteRequest_whenDeletePostIt_thenReturnPostItDto() {
+    void givenPostItDeleteRequest_whenUpdatePostIt_thenReturnPostItDtoList() {
         //given
         PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
-        PostIt testPostIt2 = PostIt.of("test2", userAccount, LocalDateTime.now());
+        given(postItRepository.saveAll(List.of(testPostIt1))).willReturn(List.of(testPostIt1));
 
         //when
-
-
-
-        //then
-
-    }
-
-    @DisplayName("포스트잇 완료 처리 테스트")
-    @Test
-    void givenPostItChagneReqeust_whenChangePostIt_thenReturnPostItDto() {
-        //given
-
-
-        //when
+        var postItList = sut.updatePostIt(List.of(PostItDto.from(testPostIt1)) ,UserAccountDto.from(userAccount));
 
         //then
-
+        verify(postItRepository).saveAll(any());
+        assertEquals(1, postItList.size());
     }
 }
