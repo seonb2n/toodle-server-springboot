@@ -8,4 +8,6 @@ import java.util.List;
 public interface PostItRepository extends JpaRepository<PostIt, Long> {
 
     List<PostIt> findAllByUserAccount_Email(String userEmail);
+
+    void deleteAllByUserAccount_Email(String userEmail);
 }
