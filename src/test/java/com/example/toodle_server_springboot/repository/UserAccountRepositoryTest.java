@@ -1,11 +1,13 @@
 package com.example.toodle_server_springboot.repository;
 
+import com.example.toodle_server_springboot.config.TestJpaConfig;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("사용자 계정 JPA 연결 태스트")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import({TestJpaConfig.class})
 class UserAccountRepositoryTest {
 
     private final UserAccountRepository userAccountRepository;
@@ -49,5 +52,18 @@ class UserAccountRepositoryTest {
         assertThat(userEntity)
                 .isNotNull()
                 .isNotEmpty();
+    }
+
+    @DisplayName("사용자 회원 가입 test")
+    @Test
+    void givenUserRegiserDto_whenRegisterUser_thenReturnUser() {
+        //given
+
+        //when
+        var userAccount = userAccountRepository.save(UserAccount.of("testEmail", "testName", "testPw"));
+
+        //then
+        assertThat(userAccount.getUserId())
+                .isNotNull();
     }
 }
