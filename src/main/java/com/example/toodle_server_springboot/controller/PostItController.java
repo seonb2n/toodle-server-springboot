@@ -1,6 +1,7 @@
 package com.example.toodle_server_springboot.controller;
 
 import com.example.toodle_server_springboot.dto.PostItDto;
+import com.example.toodle_server_springboot.dto.request.PostItUpdateRequest;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.PostItService;
 import lombok.RequiredArgsConstructor;
@@ -32,16 +33,16 @@ public class PostItController {
 
     /**
      * 사용자의 포스트잇을 서버에 저장한다.
-     * @param postItDtoList
+     * @param updateRequest
      * @param userPrincipal
      * @return
      */
     @PostMapping("/update")
     public ResponseEntity<List<PostItDto>> updateAllPostIt(
-            @RequestBody List<PostItDto> postItDtoList,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
-    ) {
-        var updatedPostItDtoList = postItService.updatePostIt(postItDtoList, userPrincipal.toDto());
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody PostItUpdateRequest updateRequest
+            ) {
+        var updatedPostItDtoList = postItService.updatePostIt(updateRequest.getPostItDtoList(), userPrincipal.toDto());
         return ResponseEntity.ok(updatedPostItDtoList);
     }
 

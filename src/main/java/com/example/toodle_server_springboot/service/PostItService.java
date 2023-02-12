@@ -5,17 +5,21 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.PostItDto;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.repository.PostItRepository;
+import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostItService {
 
     private final PostItRepository postItRepository;
+    private final UserAccountRepository userAccountRepository;
 
     /**
      * PostIt 저장하는 메서드
@@ -35,6 +39,7 @@ public class PostItService {
      * @param userAccountDto
      * @return
      */
+    @Transactional(readOnly = true)
     public List<PostItDto> getAllPostIt(UserAccountDto userAccountDto) {
         return postItRepository.findAllByUserAccount_Email(userAccountDto.email()).stream().map(PostItDto::from).toList();
     }
@@ -50,7 +55,8 @@ public class PostItService {
         // todo soft delete 와 hard delete 중 뭐가 더 좋을까?
         postItRepository.deleteAllByUserAccount_Email(userAccountDto.email());
         // 새로운 포스트잇 리스트로 업데이트한다
-        var updatePostItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccountDto.toEntity())).toList();
+        var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email()).orElseThrow();
+        var updatePostItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccount)).toList();
         return postItRepository.saveAll(updatePostItList).stream().map(PostItDto::from).toList();
     }
 }

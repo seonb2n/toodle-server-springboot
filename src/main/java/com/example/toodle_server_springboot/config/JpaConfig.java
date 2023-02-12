@@ -1,6 +1,6 @@
 package com.example.toodle_server_springboot.config;
 
-import com.example.toodle_server_springboot.domain.user.UserAccount;
+import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -25,8 +25,8 @@ public class JpaConfig {
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
-                .map(UserAccount.class::cast)
-                .map(UserAccount::getEmail);
+                .map(UserPrincipal.class::cast)
+                .map(UserPrincipal::getUsername);
     }
 
 }
