@@ -1,22 +1,60 @@
 package com.example.toodle_server_springboot.domain.project;
 
 import com.example.toodle_server_springboot.domain.BaseEntity;
+import com.example.toodle_server_springboot.domain.project.task.Task;
+import com.example.toodle_server_springboot.domain.user.UserAccount;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @ToString(callSuper = true)
 @Entity
-@Table(name = "tb_project")
+@Table(name = "project")
 public class Project extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "project_id")
+    private Long projectId;
+
+    @Setter
+    @JoinColumn(name = "userId")
+    @ManyToOne(optional = false)
+    private UserAccount userAccount;
 
     private String projectName;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<Task> taskSet = new LinkedHashSet<>();
 
+    protected Project() {}
+
+    private Project (UserAccount userAccount, String projectName) {
+        this.userAccount = userAccount;
+        this.projectName = projectName;
+    }
+
+    public Project of(UserAccount userAccount, String projectName) {
+        return new Project(userAccount, projectName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(userAccount, project.userAccount) && Objects.equals(projectName, project.projectName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userAccount, projectName);
+    }
 }
