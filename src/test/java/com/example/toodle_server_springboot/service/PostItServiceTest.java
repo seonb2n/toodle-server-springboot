@@ -5,6 +5,7 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.PostItDto;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.repository.PostItRepository;
+import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +30,7 @@ class PostItServiceTest {
     @InjectMocks private PostItService sut;
 
     @Mock private PostItRepository postItRepository;
+    @Mock private UserAccountRepository userAccountRepository;
 
     private static UserAccount userAccount;
     private static String testEmail = "testEmail";
@@ -77,7 +80,7 @@ class PostItServiceTest {
         //given
         PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
         given(postItRepository.saveAll(List.of(testPostIt1))).willReturn(List.of(testPostIt1));
-
+        given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
         //when
         var postItList = sut.updatePostIt(List.of(PostItDto.from(testPostIt1)) ,UserAccountDto.from(userAccount));
 

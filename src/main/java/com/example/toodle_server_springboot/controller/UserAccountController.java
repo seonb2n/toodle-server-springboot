@@ -42,7 +42,8 @@ public class UserAccountController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> authenticateUser(@RequestBody UserAccountAuthenticateRequest request) throws Exception{
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+        authenticationManager.authenticate(authenticationToken);
         var userDetails = jwtUserDetailsService.loadUserByUsername(request.email());
         var token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new UserAccountAuthenticateResponse(token));

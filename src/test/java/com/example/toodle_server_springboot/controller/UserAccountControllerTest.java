@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +33,7 @@ public class UserAccountControllerTest {
 
     @MockBean private JwtUserDetailsService jwtUserDetailsService;
     @MockBean private JwtTokenUtil jwtTokenUtil;
+    @MockBean private AuthenticationManager authenticationManager;
 
     UserAccountControllerTest(@Autowired MockMvc mvc) {
         this.mvc= mvc;
@@ -51,8 +53,9 @@ public class UserAccountControllerTest {
     @Test
     public void givenLoginRequest_whenTryLogin_thenReturn200() throws Exception {
         //given
-        UserAccountAuthenticateRequest request = new UserAccountAuthenticateRequest("sbkim@naver.com", "1q2w3e4r!");
+        UserAccountAuthenticateRequest request = new UserAccountAuthenticateRequest("sbkim@naver.com", "1q2w3e4r!!");
         given(jwtTokenUtil.generateToken(any())).willReturn("1234");
+        given(authenticationManager.authenticate(any())).willReturn(null);
         //when & then
         mvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
