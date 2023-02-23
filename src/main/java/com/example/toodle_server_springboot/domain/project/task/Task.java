@@ -27,7 +27,7 @@ public class Task extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "task_id", columnDefinition = "BINARY(16)")
+    @Column(name = "task_id")
     private UUID taskId;
 
     @Setter

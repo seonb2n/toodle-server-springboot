@@ -23,7 +23,7 @@ public class Project extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "project_id", columnDefinition = "BINARY(16)")
+    @Column(name = "project_id")
     private UUID projectId;
 
     @Setter

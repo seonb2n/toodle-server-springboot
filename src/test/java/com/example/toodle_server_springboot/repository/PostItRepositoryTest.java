@@ -50,7 +50,7 @@ class PostItRepositoryTest {
         var savedPostIt = postItRepository.save(postIt);
 
         //then
-        assertThat(savedPostIt.getId()).isNotNull();
+        assertThat(savedPostIt.getPostItId()).isNotNull();
     }
 
     @DisplayName("postIt 업데이트 test")

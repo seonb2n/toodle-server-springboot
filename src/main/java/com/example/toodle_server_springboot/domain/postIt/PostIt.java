@@ -5,10 +5,12 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -17,8 +19,10 @@ import java.util.Objects;
 public class PostIt extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "postit_id")
+    private UUID postItId;
 
     @Setter
     @JoinColumn(name = "userId")
@@ -59,11 +63,11 @@ public class PostIt extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostIt postIt = (PostIt) o;
-        return isDone == postIt.isDone && Objects.equals(id, postIt.id) && Objects.equals(content, postIt.content) && Objects.equals(endTime, postIt.endTime);
+        return isDone == postIt.isDone && Objects.equals(postItId, postIt.postItId) && Objects.equals(content, postIt.content) && Objects.equals(endTime, postIt.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, endTime, isDone);
+        return Objects.hash(postItId, content, endTime, isDone);
     }
 }

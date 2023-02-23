@@ -26,7 +26,7 @@ public class Action extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "action_id", columnDefinition = "BINARY(16)")
+    @Column(name = "action_id")
     private UUID actionId;
 
 
