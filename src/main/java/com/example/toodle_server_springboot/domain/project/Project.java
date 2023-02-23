@@ -6,11 +6,13 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -19,9 +21,10 @@ import java.util.Set;
 public class Project extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_id")
-    private Long projectId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "project_id", columnDefinition = "BINARY(16)")
+    private UUID projectId;
 
     @Setter
     @JoinColumn(name = "userId")

@@ -7,10 +7,12 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * 업무의 최소 단위
@@ -23,9 +25,10 @@ import java.util.Set;
 public class Task extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "task_id")
-    private Long taskId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "task_id", columnDefinition = "BINARY(16)")
+    private UUID taskId;
 
     @Setter
     @JoinColumn(name = "userId")

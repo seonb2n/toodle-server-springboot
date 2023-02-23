@@ -6,10 +6,12 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 행동의 단위
@@ -22,9 +24,10 @@ import java.util.Objects;
 public class Action extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "action_id")
-    private Long actionId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "action_id", columnDefinition = "BINARY(16)")
+    private UUID actionId;
 
 
     @Setter
