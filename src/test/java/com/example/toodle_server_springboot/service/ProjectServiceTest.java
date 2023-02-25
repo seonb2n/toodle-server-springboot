@@ -26,6 +26,7 @@ class ProjectServiceTest {
         //given
 
         //when
+        sut.registerProject();
 
         //then
 
