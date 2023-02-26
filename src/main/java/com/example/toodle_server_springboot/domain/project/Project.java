@@ -44,7 +44,7 @@ public class Project extends BaseEntity {
         this.projectName = projectName;
     }
 
-    public Project of(UserAccount userAccount, String projectName) {
+    public static Project of(UserAccount userAccount, String projectName) {
         return new Project(userAccount, projectName);
     }
 

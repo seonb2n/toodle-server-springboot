@@ -54,7 +54,7 @@ public class Task extends BaseEntity {
         this.content = content;
     }
 
-    public Task of (UserAccount userAccount, Project project, String content) {
+    public static Task of (UserAccount userAccount, Project project, String content) {
         return new Task(userAccount, project, content);
     }
 }
