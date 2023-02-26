@@ -37,6 +37,10 @@ public class Project extends BaseEntity {
     @ToString.Exclude
     private Set<Task> taskSet = new LinkedHashSet<>();
 
+    public void addTask(Task task) {
+        taskSet.add(task);
+    }
+
     protected Project() {}
 
     private Project (UserAccount userAccount, String projectName) {

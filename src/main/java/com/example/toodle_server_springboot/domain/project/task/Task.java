@@ -46,6 +46,10 @@ public class Task extends BaseEntity {
     @ToString.Exclude
     private Set<Action> actionSet = new LinkedHashSet<>();
 
+    public void addAction(Action action) {
+        actionSet.add(action);
+    }
+
     protected Task() {}
 
     private Task(UserAccount userAccount, Project project, String content) {
