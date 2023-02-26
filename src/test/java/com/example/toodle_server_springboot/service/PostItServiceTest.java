@@ -33,9 +33,9 @@ class PostItServiceTest {
     @Mock private UserAccountRepository userAccountRepository;
 
     private static UserAccount userAccount;
-    private static String testEmail = "testEmail";
-    private static String testNickName = "testNickName";
-    private static String testPwd = "testPwd";
+    private static final String testEmail = "testEmail";
+    private static final String testNickName = "testNickName";
+    private static final String testPwd = "testPwd";
 
     @BeforeEach
     void init() {
