@@ -52,6 +52,11 @@ public class Project extends BaseEntity {
         return new Project(userAccount, projectName);
     }
 
+    public void update(String projectName, Set<Task> taskSet) {
+        this.projectName = projectName;
+        this.taskSet.addAll(taskSet);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -11,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -60,5 +61,23 @@ public class Task extends BaseEntity {
 
     public static Task of (UserAccount userAccount, Project project, String content) {
         return new Task(userAccount, project, content);
+    }
+
+    public void update(String content, Set<Action> actionSet) {
+        this.content = content;
+        this.actionSet.addAll(actionSet);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(userAccount, task.userAccount) && Objects.equals(project, task.project) && Objects.equals(content, task.content) && Objects.equals(actionSet, task.actionSet);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userAccount, project, content, actionSet);
     }
 }

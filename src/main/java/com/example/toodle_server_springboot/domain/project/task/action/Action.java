@@ -66,6 +66,12 @@ public class Action extends BaseEntity {
         return new Action(userAccount, task, content,  dueDate, isDone);
     }
 
+    public void update(String content, LocalDateTime dueDate, boolean isDone) {
+        this.content = content;
+        this.dueDate = dueDate;
+        this.isDone = isDone;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
