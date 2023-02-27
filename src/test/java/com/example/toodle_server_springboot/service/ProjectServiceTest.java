@@ -21,10 +21,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -43,18 +44,34 @@ class ProjectServiceTest {
     private static final String testEmail = "testEmail";
     private static final String testNickName = "testNickName";
     private static final String testPwd = "testPwd";
+    private static UUID projectId;
+    private static UUID taskId;
+    private static UUID actionId;
+    private static ProjectDto projectDto;
+    private static TaskDto taskDto;
+    private static ActionDto actionDto;
+    private static Project projectEntity;
+    private static Task taskEntity;
+    private static Action actionEntity;
 
     @BeforeEach
     void init() {
         userAccount = UserAccount.of(testEmail, testNickName, testPwd);
+        projectId = UUID.randomUUID();
+        taskId = UUID.randomUUID();
+        actionId = UUID.randomUUID();
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test", new HashSet<>());
+        taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test", new HashSet<>());
+        actionDto = new ActionDto(actionId, UserAccountDto.from(userAccount), "action-test", LocalDateTime.now().plusDays(1L),false);
+        projectEntity = projectDto.toEntity(userAccount);
+        taskEntity = taskDto.toEntity(userAccount, projectEntity);
+        actionEntity = actionDto.toEntity(userAccount, taskEntity);
     }
 
     @DisplayName("프로젝트 등록 테스트 - 성공 ")
     @Test
     void givenProjectDto_whenRegisterProject_thenReturnProject() {
         //given
-        UUID projectId = UUID.randomUUID();
-        var projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test", new HashSet<>());
         given(projectRepository.save(any(Project.class))).willReturn(Project.of(userAccount, "project-test"));
 
         //when
@@ -69,10 +86,6 @@ class ProjectServiceTest {
     @Test
     void givenProjectDtoWithTask_whenRegisterProject_thenReturnProject() {
         //given
-        UUID projectId = UUID.randomUUID();
-        UUID taskId = UUID.randomUUID();
-        var projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test", new HashSet<>());
-        var taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test", Set.of());
         projectDto.taskDtoSet().add(taskDto);
         given(projectRepository.save(any(Project.class))).willReturn(Project.of(userAccount, "project-test"));
         given(taskRepository.save(any(Task.class))).willReturn(Task.of(userAccount, any(),"task-test"));
@@ -90,17 +103,8 @@ class ProjectServiceTest {
     @Test
     void givenProjectDtoWithTaskWithAction_whenRegisterProject_thenReturnProject() {
         //given
-        UUID projectId = UUID.randomUUID();
-        UUID taskId = UUID.randomUUID();
-        UUID actionID = UUID.randomUUID();
-        var projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test", new HashSet<>());
-        var taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test", new HashSet<>());
-        var actionDto = new ActionDto(actionID, UserAccountDto.from(userAccount), "action-test", LocalDateTime.now().plusDays(1L),false);
         taskDto.actionDtoSet().add(actionDto);
         projectDto.taskDtoSet().add(taskDto);
-        var projectEntity = projectDto.toEntity(userAccount);
-        var taskEntity = taskDto.toEntity(userAccount, projectEntity);
-        var actionEntity = actionDto.toEntity(userAccount, taskEntity);
         given(projectRepository.save(any(Project.class))).willReturn(projectEntity);
         given(taskRepository.save(any(Task.class))).willReturn(taskEntity);
         given(actionRepository.save(any(Action.class))).willReturn(actionEntity);
@@ -119,12 +123,16 @@ class ProjectServiceTest {
     @Test
     void givenProjectDto_whenUpdateProject_thenReturnProject() {
         //given
-
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
 
         //when
+        var updatedProject = sut.updateProject(userAccount, projectDto);
 
         //then
-
+        verify(projectRepository).findById(any(UUID.class));
+        assertThat(updatedProject).isNotNull();
+        assertEquals("project-test2", updatedProject.projectName());
     }
 
     @DisplayName("프로젝트, 테스크 수정 테스트 - 성공")
