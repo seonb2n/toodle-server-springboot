@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -134,11 +135,12 @@ class ProjectServiceTest {
         assertEquals("project-test2", updatedProject.projectName());
     }
 
-    @DisplayName("프로젝트, 테스크 수정 테스트 - 성공")
+    @DisplayName("프로젝트, 기존에 존재하던 테스크 수정 테스트 - 성공")
     @Test
     void givenProjectWithTaskDto_whenUpdateProject_thenReturnProject() {
         //given
         projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test2", new HashSet<>());
         projectDto.taskDtoSet().add(taskDto);
         given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
         given(taskRepository.save(any(Task.class))).willReturn(taskEntity);
@@ -152,18 +154,59 @@ class ProjectServiceTest {
         assertThat(updatedProject).isNotNull();
         assertEquals("project-test2", updatedProject.projectName());
         assertEquals(1, updatedProject.taskDtoSet().size());
+        assertEquals("task-test2", updatedProject.taskDtoSet().iterator().next().content());
     }
 
-    @DisplayName("프로젝트, 태스크, 액션 수정 테스트 - 성공")
+    @DisplayName("프로젝트, 새로 추가된 테스크 수정 테스트 - 성공")
     @Test
-    void givenProjectWithTaskWithActionDto_whenUpdateProject_thenReturnProject() {
+    public void givenProjectWithNewTaskDto_whenUpdateProject_thenReturnProject() throws Exception {
         //given
 
 
         //when
 
-        //then
 
+        //then
+    }
+
+    @DisplayName("프로젝트, 기존 태스크, 기존 액션 수정 테스트 - 성공")
+    @Test
+    void givenProjectWithTaskWithActionDto_whenUpdateProject_thenReturnProject() {
+        //given
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test2", new HashSet<>());
+        actionDto = new ActionDto(actionId, UserAccountDto.from(userAccount), "action-test2", LocalDateTime.now().plusDays(1L),false);
+        taskDto.actionDtoSet().add(actionDto);
+        projectDto.taskDtoSet().add(taskDto);
+        given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
+        given(taskRepository.findById(taskId)).willReturn(Optional.of(taskEntity));
+        given(actionRepository.findById(actionId)).willReturn(Optional.of(actionEntity));
+
+        //when
+        var updatedProject = sut.updateProject(userAccount, projectDto);
+
+        //then
+        verify(projectRepository).findById(any(UUID.class));
+        verify(taskRepository).findById(any(UUID.class));
+        verify(actionRepository).findById(any(UUID.class));
+        assertThat(updatedProject).isNotNull();
+        assertEquals("project-test2", updatedProject.projectName());
+        assertEquals(1, updatedProject.taskDtoSet().size());
+        assertEquals("task-test2", updatedProject.taskDtoSet().iterator().next().content());
+        assertEquals(1, updatedProject.taskDtoSet().iterator().next().actionDtoSet().size());
+        assertEquals("action-test2", updatedProject.taskDtoSet().iterator().next().actionDtoSet().iterator().next().content());
+    }
+
+    @DisplayName("프로젝트, 기존 테스크, 새로 추가된 액션 수정 테스트 성공")
+    @Test
+    public void givenProjectWithTaskWithNewAction_whenUpdateProject_thenReturnProject() throws Exception {
+        //given
+
+
+        //when
+
+
+        //then
     }
 
     @DisplayName("프로젝트 삭제 테스트 - 성공")

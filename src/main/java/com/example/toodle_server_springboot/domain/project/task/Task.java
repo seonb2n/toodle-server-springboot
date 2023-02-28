@@ -63,9 +63,8 @@ public class Task extends BaseEntity {
         return new Task(userAccount, project, content);
     }
 
-    public void update(String content, Set<Action> actionSet) {
+    public void update(String content) {
         this.content = content;
-        this.actionSet.addAll(actionSet);
     }
 
     @Override
