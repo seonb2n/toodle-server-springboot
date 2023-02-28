@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -139,12 +138,20 @@ class ProjectServiceTest {
     @Test
     void givenProjectWithTaskDto_whenUpdateProject_thenReturnProject() {
         //given
-
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        projectDto.taskDtoSet().add(taskDto);
+        given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
+        given(taskRepository.save(any(Task.class))).willReturn(taskEntity);
 
         //when
+        var updatedProject = sut.updateProject(userAccount, projectDto);
 
         //then
-
+        verify(projectRepository).findById(any(UUID.class));
+        verify(taskRepository).save(any(Task.class));
+        assertThat(updatedProject).isNotNull();
+        assertEquals("project-test2", updatedProject.projectName());
+        assertEquals(1, updatedProject.taskDtoSet().size());
     }
 
     @DisplayName("프로젝트, 태스크, 액션 수정 테스트 - 성공")
