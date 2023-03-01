@@ -28,6 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 @DisplayName("비즈니스 로직 - 프로젝트")
@@ -241,12 +242,13 @@ class ProjectServiceTest {
     @Test
     void givenDeleteProjectDto_whenDeleteProject_thenReturnVoid() {
         //given
-
+        doNothing().when(projectRepository).deleteProjectByProjectId(projectId);
 
         //when
+        sut.deleteProject(projectId);
 
         //then
-
+        verify(projectRepository).deleteProjectByProjectId(projectId);
     }
 
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +69,9 @@ public class ProjectService {
     /**
      * 기존에 존재하던 프로젝트를 삭제하는 메서드
      */
-    public void deleteProject() {}
+    public void deleteProject(UUID projectId) {
+        projectRepository.deleteProjectByProjectId(projectId);
+    }
 
     /**
      * 태스크를 새로 등록하는 메서드
