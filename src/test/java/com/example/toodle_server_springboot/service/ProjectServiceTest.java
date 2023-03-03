@@ -8,6 +8,7 @@ import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.dto.project.ActionDto;
 import com.example.toodle_server_springboot.dto.project.ProjectDto;
 import com.example.toodle_server_springboot.dto.project.TaskDto;
+import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import com.example.toodle_server_springboot.repository.project.ActionRepository;
 import com.example.toodle_server_springboot.repository.project.ProjectRepository;
 import com.example.toodle_server_springboot.repository.project.TaskRepository;
@@ -21,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,6 +42,7 @@ class ProjectServiceTest {
     @Mock private ProjectRepository projectRepository;
     @Mock private TaskRepository taskRepository;
     @Mock private ActionRepository actionRepository;
+    @Mock private UserAccountRepository userAccountRepository;
 
     private static UserAccount userAccount;
     private static final String testEmail = "testEmail";
@@ -67,6 +70,25 @@ class ProjectServiceTest {
         projectEntity = projectDto.toEntity(userAccount);
         taskEntity = taskDto.toEntity(userAccount, projectEntity);
         actionEntity = actionDto.toEntity(userAccount, taskEntity);
+    }
+
+    @DisplayName("프로젝트 조회 테스트 - 성공")
+    @Test
+    void givenUserAccount_whenFindProject_thenReturnProject() {
+        //given
+        UserAccount user = UserAccount.of("test-email", "test-nickname", "test-pwd");
+        taskEntity.addAction(actionEntity);
+        projectEntity.addTask(taskEntity);
+        given(userAccountRepository.findUserAccountByEmail(any()))
+                .willReturn(Optional.of(user));
+        given(projectRepository.findAllByUserAccount_UserId(any())).willReturn(List.of(projectEntity));
+
+        //when
+        var projectList = sut.findAllProject(UserAccountDto.from(user));
+
+        //then
+        verify(userAccountRepository).findUserAccountByEmail(any());
+        verify(projectRepository).findAllByUserAccount_UserId(any());
     }
 
     @DisplayName("프로젝트 등록 테스트 - 성공 ")
