@@ -4,9 +4,11 @@ import com.example.toodle_server_springboot.domain.project.Project;
 import com.example.toodle_server_springboot.domain.project.task.Task;
 import com.example.toodle_server_springboot.domain.project.task.action.Action;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
+import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.dto.project.ActionDto;
 import com.example.toodle_server_springboot.dto.project.ProjectDto;
 import com.example.toodle_server_springboot.dto.project.TaskDto;
+import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import com.example.toodle_server_springboot.repository.project.ActionRepository;
 import com.example.toodle_server_springboot.repository.project.ProjectRepository;
 import com.example.toodle_server_springboot.repository.project.TaskRepository;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +27,14 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
     private final ActionRepository actionRepository;
+    private final UserAccountRepository userAccountRepository;
+
+    public List<ProjectDto> findAllProject(UserAccountDto userAccountDto) {
+        var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email())
+                .orElseThrow();
+        var projectList = projectRepository.findAllByUserAccount_UserId(userAccount.getUserId());
+        return projectList.stream().map(ProjectDto::from).toList();
+    }
 
     /**
      * 새로운 프로젝트를 서버에 등록하는 메서드
