@@ -9,4 +9,9 @@ public record ActionRequest(
         LocalDateTime dueDate,
         boolean isDone
 ) {
+
+    public static ActionRequest of(UUID uuid, String content, LocalDateTime dueDate, boolean isDone) {
+        return new ActionRequest(uuid, content, dueDate, isDone);
+    }
+
 }

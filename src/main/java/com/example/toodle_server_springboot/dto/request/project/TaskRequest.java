@@ -8,4 +8,9 @@ public record TaskRequest(
         String content,
         List<ActionRequest> actionRequestList
 ) {
+
+    public static TaskRequest of(UUID uuid, String content, List<ActionRequest> actionRequestList) {
+        return new TaskRequest(uuid, content, actionRequestList);
+    }
+
 }

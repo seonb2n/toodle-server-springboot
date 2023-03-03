@@ -8,4 +8,9 @@ public record ProjectRequest(
         String projectName,
         List<TaskRequest> taskRequestList
 ) {
+
+    public static ProjectRequest of(UUID uuid, String projectName, List<TaskRequest> taskRequestList) {
+        return new ProjectRequest(uuid, projectName, taskRequestList);
+    }
+
 }
