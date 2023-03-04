@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @Entity
-@Table(name = "project")
+@Table(name = "tb_project")
 public class Project extends BaseEntity {
 
     @Id

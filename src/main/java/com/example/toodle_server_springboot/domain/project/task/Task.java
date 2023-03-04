@@ -22,7 +22,7 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @Entity
-@Table(name = "task")
+@Table(name = "tb_task")
 public class Task extends BaseEntity {
 
     @Id
