@@ -29,6 +29,7 @@ public class ProjectService {
     private final ActionRepository actionRepository;
     private final UserAccountRepository userAccountRepository;
 
+    @Transactional(readOnly = true)
     public List<ProjectDto> findAllProject(UserAccountDto userAccountDto) {
         var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email())
                 .orElseThrow();
