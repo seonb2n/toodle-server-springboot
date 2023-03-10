@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +43,7 @@ class PostItRepositoryTest {
     @Test
     void givenPostIt_whenInserting_thenReturnPostIt() {
         //given
-        PostIt postIt = PostIt.of("content", userAccount, LocalDateTime.now());
+        PostIt postIt = PostIt.of("content", userAccount);
 
         //when
         var savedPostIt = postItRepository.save(postIt);
@@ -57,8 +56,8 @@ class PostItRepositoryTest {
     @Test
     void givenPostItList_whenUpdate_thenReturnPostItList() {
         //given
-        PostIt postIt1 = PostIt.of("content", userAccount, LocalDateTime.now());
-        PostIt postIt2 = PostIt.of("content", userAccount, LocalDateTime.now());
+        PostIt postIt1 = PostIt.of("content", userAccount);
+        PostIt postIt2 = PostIt.of("content", userAccount);
         var postItList = postItRepository.saveAll(List.of(postIt1, postIt2));
 
         //when

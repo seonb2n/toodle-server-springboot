@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -33,9 +32,6 @@ public class PostIt extends BaseEntity {
     @Column(name = "postit_content")
     private String content;
 
-    @Setter
-    @Column(name = "postit_end_time")
-    private LocalDateTime endTime;
 
     @Setter
     @Column(name = "postit_is_done")
@@ -43,19 +39,18 @@ public class PostIt extends BaseEntity {
 
     protected PostIt() {}
 
-    private PostIt(String content, UserAccount userAccount, LocalDateTime endTime, boolean isDone) {
+    private PostIt(String content, UserAccount userAccount, boolean isDone) {
         this.content = content;
         this.userAccount = userAccount;
-        this.endTime = endTime;
         this.isDone = isDone;
     }
 
-    public static PostIt of(String content, UserAccount userAccount, LocalDateTime endTime) {
-        return new PostIt(content, userAccount, endTime, false);
+    public static PostIt of(String content, UserAccount userAccount) {
+        return new PostIt(content, userAccount, false);
     }
 
-    public static PostIt of(String content, UserAccount userAccount, LocalDateTime endTime, boolean isDone) {
-        return new PostIt(content, userAccount, endTime, isDone);
+    public static PostIt of(String content, UserAccount userAccount, boolean isDone) {
+        return new PostIt(content, userAccount, isDone);
     }
 
     @Override
@@ -63,11 +58,11 @@ public class PostIt extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostIt postIt = (PostIt) o;
-        return isDone == postIt.isDone && Objects.equals(postItId, postIt.postItId) && Objects.equals(content, postIt.content) && Objects.equals(endTime, postIt.endTime);
+        return isDone == postIt.isDone && Objects.equals(postItId, postIt.postItId) && Objects.equals(content, postIt.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postItId, content, endTime, isDone);
+        return Objects.hash(postItId, content, isDone);
     }
 }

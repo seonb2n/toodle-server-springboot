@@ -43,6 +43,7 @@ public class Task extends BaseEntity {
 
     private String content;
 
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Action> actionSet = new LinkedHashSet<>();

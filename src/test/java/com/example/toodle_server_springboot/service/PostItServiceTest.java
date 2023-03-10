@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,11 +46,10 @@ class PostItServiceTest {
     void givenPostItRegisterRequest_whenRegisterPostIt_thenReturnPostItDto() {
         //given
         String content = "content";
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1L);
-        given(postItRepository.save(any(PostIt.class))).willReturn(PostIt.of(content, userAccount, tomorrow));
+        given(postItRepository.save(any(PostIt.class))).willReturn(PostIt.of(content, userAccount));
 
         //when
-        var savedPostItDto = sut.registerPostIt(userAccount, content, tomorrow, false);
+        var savedPostItDto = sut.registerPostIt(userAccount, content, false);
 
         //then
         verify(postItRepository).save(any(PostIt.class));
@@ -62,8 +60,8 @@ class PostItServiceTest {
     @Test
     void givenUserAccount_whenFindPostIT_thenReturnPostItDtoList() {
         //given
-        PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
-        PostIt testPostIt2 = PostIt.of("test2", userAccount, LocalDateTime.now());
+        PostIt testPostIt1 = PostIt.of("test1", userAccount);
+        PostIt testPostIt2 = PostIt.of("test2", userAccount);
         given(postItRepository.findAllByUserAccount_Email(userAccount.getEmail())).willReturn(List.of(testPostIt1, testPostIt2));
 
         //when
@@ -78,7 +76,7 @@ class PostItServiceTest {
     @Test
     void givenPostItDeleteRequest_whenUpdatePostIt_thenReturnPostItDtoList() {
         //given
-        PostIt testPostIt1 = PostIt.of("test1", userAccount, LocalDateTime.now());
+        PostIt testPostIt1 = PostIt.of("test1", userAccount);
         given(postItRepository.saveAll(List.of(testPostIt1))).willReturn(List.of(testPostIt1));
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
         //when

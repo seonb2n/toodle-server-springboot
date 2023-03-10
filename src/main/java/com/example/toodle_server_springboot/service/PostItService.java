@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,12 +24,11 @@ public class PostItService {
      * PostIt 저장하는 메서드
      * @param userAccount
      * @param content
-     * @param endTime
      * @param isDone
      * @return
      */
-    public PostItDto registerPostIt(UserAccount userAccount, String content, LocalDateTime endTime, boolean isDone) {
-        var initPostItEntity = PostIt.of(content, userAccount, endTime, isDone);
+    public PostItDto registerPostIt(UserAccount userAccount, String content, boolean isDone) {
+        var initPostItEntity = PostIt.of(content, userAccount, isDone);
         return PostItDto.from(postItRepository.save(initPostItEntity));
     }
 

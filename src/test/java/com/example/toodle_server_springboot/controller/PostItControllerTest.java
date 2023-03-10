@@ -14,7 +14,6 @@ import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -56,8 +55,8 @@ class PostItControllerTest {
     @Test
     void givenAuthorizedUser_whenRequesting_thenReturnPostItList() throws Exception {
         //given
-        PostItDto testPostItDto1 = createPostIt("test", LocalDateTime.now().plusDays(1L), false);
-        PostItDto testPostItDto2 = createPostIt("test", LocalDateTime.now().plusDays(2L), true);
+        PostItDto testPostItDto1 = createPostIt("test", false);
+        PostItDto testPostItDto2 = createPostIt("test", true);
         given(postItService.getAllPostIt(any())).willReturn(List.of(testPostItDto1, testPostItDto2));
 
         //when
@@ -70,7 +69,7 @@ class PostItControllerTest {
         then(postItService).should().getAllPostIt(any());
     }
 
-    public PostItDto createPostIt(String content, LocalDateTime endDay, boolean isDone) {
-        return PostItDto.of(content, endDay, isDone);
+    public PostItDto createPostIt(String content, boolean isDone) {
+        return PostItDto.of(content, isDone);
     }
 }
