@@ -6,9 +6,7 @@ import com.example.toodle_server_springboot.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -31,4 +29,30 @@ public class ProjectController {
         return ResponseEntity.ok(projectResponse);
     }
 
+    /**
+     * 프로젝트를 업데이트 한다.
+     * @return
+     */
+    @PostMapping("/update")
+    public ResponseEntity<ProjectResponse> updateProject() {
+        return ResponseEntity.ok(null);
+    }
+
+    /**
+     * 프로젝트를 등록한다.
+     * @return
+     */
+    @PostMapping("/register")
+    public ResponseEntity<ProjectResponse> registerProject() {
+        return ResponseEntity.ok(null);
+    }
+
+    /**
+     * 프로젝트를 삭제한다.
+     * @return
+     */
+    @DeleteMapping("/delete/{projectId}")
+    public ResponseEntity<String> deleteProject() {
+        return ResponseEntity.ok("삭제 성공");
+    }
 }
