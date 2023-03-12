@@ -13,11 +13,12 @@ public record TaskDto(
     UUID taskId,
     UserAccountDto userAccountDto,
     String content,
+    String importance,
     Set<ActionDto> actionDtoSet
 ) {
 
-    public static TaskDto of(UUID taskId, UserAccountDto userAccountDto, String content, Set<ActionDto> actionDtoSet) {
-        return new TaskDto(taskId, userAccountDto, content,actionDtoSet);
+    public static TaskDto of(UUID taskId, UserAccountDto userAccountDto, String content, String importance, Set<ActionDto> actionDtoSet) {
+        return new TaskDto(taskId, userAccountDto, content, importance, actionDtoSet);
     }
 
     public static TaskDto from(Task task) {
@@ -25,6 +26,7 @@ public record TaskDto(
                 task.getTaskId(),
                 UserAccountDto.from(task.getUserAccount()),
                 task.getContent(),
+                task.getImportnace().toString(),
                 task.getActionSet().stream().map(ActionDto::from).collect(Collectors.toSet())
         );
     }
@@ -33,7 +35,8 @@ public record TaskDto(
         return Task.of(
                 userAccount,
                 project,
-                content
+                content,
+                Task.IMPORTNACE.valueOf(importance)
         );
     }
 

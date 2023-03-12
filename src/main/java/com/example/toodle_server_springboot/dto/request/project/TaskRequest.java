@@ -10,11 +10,12 @@ import java.util.stream.Collectors;
 public record TaskRequest(
         UUID uuid,
         String content,
+        String importance,
         List<ActionRequest> actionRequestList
 ) {
 
-    public static TaskRequest of(UUID uuid, String content, List<ActionRequest> actionRequestList) {
-        return new TaskRequest(uuid, content, actionRequestList);
+    public static TaskRequest of(UUID uuid, String content, String importance, List<ActionRequest> actionRequestList) {
+        return new TaskRequest(uuid, content, importance, actionRequestList);
     }
 
     public TaskDto toDto(UserAccountDto userAccountDto) {
@@ -22,6 +23,7 @@ public record TaskRequest(
                 uuid,
                 userAccountDto,
                 content,
+                importance,
                 actionRequestList.stream()
                         .map(actionRequest -> actionRequest.toDto(userAccountDto)).collect(Collectors.toSet())
         );

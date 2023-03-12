@@ -43,6 +43,9 @@ public class Task extends BaseEntity {
 
     private String content;
 
+    @Column(name = "task_importance")
+    @Enumerated(value = EnumType.STRING)
+    private IMPORTNACE importnace;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -54,14 +57,15 @@ public class Task extends BaseEntity {
 
     protected Task() {}
 
-    private Task(UserAccount userAccount, Project project, String content) {
+    private Task(UserAccount userAccount, Project project, String content, IMPORTNACE importnace) {
         this.userAccount = userAccount;
         this.project =  project;
         this.content = content;
+        this.importnace = importnace;
     }
 
-    public static Task of (UserAccount userAccount, Project project, String content) {
-        return new Task(userAccount, project, content);
+    public static Task of (UserAccount userAccount, Project project, String content, IMPORTNACE importnace) {
+        return new Task(userAccount, project, content, importnace);
     }
 
     public void update(String content) {
@@ -79,5 +83,11 @@ public class Task extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(userAccount, project, content, actionSet);
+    }
+
+    public static enum IMPORTNACE {
+        HIGH,
+        MIDDLE,
+        LOW
     }
 }

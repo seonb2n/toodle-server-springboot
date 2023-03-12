@@ -13,8 +13,8 @@ insert into tb_project (project_id, created_at, created_by, modified_at, modifie
 values ('1017449f-daf1-4c03-9bd9-1d157c90b61f', now(), 'sbkim', now(), 'sbkim', '프로젝트 1', 1);
 
 -- sbkim 이 가진 테스크
-insert into tb_task (task_id, created_at, created_by, modified_at, modified_by, content, project_id, user_id)
-values ('d80b26ce-cfe8-460d-a0dd-0f7b45c2f5a4', now(), 'sbkim', now(), 'sbkim', '프로젝트 테스크 1', '1017449f-daf1-4c03-9bd9-1d157c90b61f', 1);
+insert into tb_task (task_id, created_at, created_by, modified_at, modified_by, content, task_importance, project_id, user_id)
+values ('d80b26ce-cfe8-460d-a0dd-0f7b45c2f5a4', now(), 'sbkim', now(), 'sbkim', '프로젝트 테스크 1',  'MIDDLE', '1017449f-daf1-4c03-9bd9-1d157c90b61f', 1);
 
 -- sbkim이 가진 액션
 insert into tb_action (action_id, created_at, created_by, modified_at, modified_by, action_content, action_due_date, actions_is_done, task_task_id, user_id)
