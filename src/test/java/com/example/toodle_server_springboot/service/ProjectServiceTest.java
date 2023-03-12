@@ -264,10 +264,12 @@ class ProjectServiceTest {
     @Test
     void givenDeleteProjectDto_whenDeleteProject_thenReturnVoid() {
         //given
+        given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
         doNothing().when(projectRepository).deleteProjectByProjectId(projectId);
 
+
         //when
-        sut.deleteProject(projectId);
+        sut.deleteProject(userAccount ,projectId);
 
         //then
         verify(projectRepository).deleteProjectByProjectId(projectId);

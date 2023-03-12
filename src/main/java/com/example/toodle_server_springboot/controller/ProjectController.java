@@ -1,12 +1,19 @@
 package com.example.toodle_server_springboot.controller;
 
+import com.example.toodle_server_springboot.domain.user.UserAccount;
+import com.example.toodle_server_springboot.dto.UserAccountDto;
+import com.example.toodle_server_springboot.dto.request.project.ProjectRequest;
 import com.example.toodle_server_springboot.dto.response.project.ProjectResponse;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.ProjectService;
+import com.example.toodle_server_springboot.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final UserAccountService userAccountService;
 
     /**
      * 사용자가 가지고 있는 모든 프로젝트를 내려준다.
@@ -34,8 +42,15 @@ public class ProjectController {
      * @return
      */
     @PostMapping("/update")
-    public ResponseEntity<ProjectResponse> updateProject() {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<ProjectResponse> updateProject(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody ProjectRequest projectRequest
+    ) {
+        UserAccountDto userAccountDto = userPrincipal.toDto();
+        UserAccount userAccount = userAccountService.findUserAccount(userAccountDto.email());
+        var projectDto = projectRequest.toDto(userAccountDto);
+        var updatedProject = projectService.updateProject(userAccount, projectDto);
+        return ResponseEntity.ok(ProjectResponse.of(List.of(updatedProject)));
     }
 
     /**
@@ -43,8 +58,15 @@ public class ProjectController {
      * @return
      */
     @PostMapping("/register")
-    public ResponseEntity<ProjectResponse> registerProject() {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<ProjectResponse> registerProject(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody ProjectRequest projectRequest
+    ) {
+        UserAccountDto userAccountDto = userPrincipal.toDto();
+        UserAccount userAccount = userAccountService.findUserAccount(userAccountDto.email());
+        var projectDto = projectRequest.toDto(userAccountDto);
+        var registeredProject = projectService.registerProject(userAccount, projectDto);
+        return ResponseEntity.ok(ProjectResponse.of(List.of(registeredProject)));
     }
 
     /**
@@ -52,7 +74,11 @@ public class ProjectController {
      * @return
      */
     @DeleteMapping("/delete/{projectId}")
-    public ResponseEntity<String> deleteProject() {
+    public ResponseEntity<String> deleteProject(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable UUID projectId) {
+        UserAccount userAccount = userAccountService.findUserAccount(userPrincipal.email());
+        projectService.deleteProject(userAccount, projectId);
         return ResponseEntity.ok("삭제 성공");
     }
 }

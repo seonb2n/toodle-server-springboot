@@ -81,8 +81,13 @@ public class ProjectService {
     /**
      * 기존에 존재하던 프로젝트를 삭제하는 메서드
      */
-    public void deleteProject(UUID projectId) {
-        projectRepository.deleteProjectByProjectId(projectId);
+    @Transactional
+    public void deleteProject(UserAccount userAccount, UUID projectId) {
+        // 프로젝트의 소유주와 삭제 요청주가 동일한지 확인해야 함
+        var projectOwner = projectRepository.findById(projectId).orElseThrow().getUserAccount();
+        if (userAccount.equals(projectOwner)) {
+            projectRepository.deleteProjectByProjectId(projectId);
+        }
     }
 
     /**

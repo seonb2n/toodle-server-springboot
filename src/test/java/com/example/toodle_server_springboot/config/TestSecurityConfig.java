@@ -27,6 +27,7 @@ public class TestSecurityConfig {
                 .willReturn(Optional.of(createUserAccountDto()));
         given(userAccountService.registerUser(anyString(), anyString(), anyString()))
                 .willReturn(createUserAccountDto());
+        given(userAccountService.findUserAccount(anyString())).willReturn(createUserAccountDto().toEntity());
     }
 
     private UserAccountDto createUserAccountDto() {
