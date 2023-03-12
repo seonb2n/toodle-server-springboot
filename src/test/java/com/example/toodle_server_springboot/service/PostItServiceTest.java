@@ -13,7 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+@EnableJpaAuditing
 @DisplayName("비즈니스 로직 - 포스트잇")
 @ExtendWith(MockitoExtension.class)
 class PostItServiceTest {
@@ -35,34 +38,37 @@ class PostItServiceTest {
     private static final String testEmail = "testEmail";
     private static final String testNickName = "testNickName";
     private static final String testPwd = "testPwd";
-
+    private static PostIt postItEntity1;
+    private static PostIt postItEntity2;
+    
     @BeforeEach
     void init() {
         userAccount = UserAccount.of(testEmail, testNickName, testPwd);
+        postItEntity1 = PostIt.of("test1", userAccount);
+        postItEntity1.setCreatedAt(LocalDateTime.now());
+        postItEntity2 = PostIt.of("test1", userAccount);
+        postItEntity2.setCreatedAt(LocalDateTime.now());
     }
 
     @DisplayName("포스트잇 등록 테스트 - 성공")
     @Test
     void givenPostItRegisterRequest_whenRegisterPostIt_thenReturnPostItDto() {
         //given
-        String content = "content";
-        given(postItRepository.save(any(PostIt.class))).willReturn(PostIt.of(content, userAccount));
+        given(postItRepository.save(any(PostIt.class))).willReturn(postItEntity1);
 
         //when
-        var savedPostItDto = sut.registerPostIt(userAccount, content, false);
+        var savedPostItDto = sut.registerPostIt(userAccount, "test1", false);
 
         //then
         verify(postItRepository).save(any(PostIt.class));
-        assertEquals(content, savedPostItDto.content());
+        assertEquals("test1", savedPostItDto.content());
     }
 
     @DisplayName("포스트잇 조회 테스트")
     @Test
     void givenUserAccount_whenFindPostIT_thenReturnPostItDtoList() {
         //given
-        PostIt testPostIt1 = PostIt.of("test1", userAccount);
-        PostIt testPostIt2 = PostIt.of("test2", userAccount);
-        given(postItRepository.findAllByUserAccount_Email(userAccount.getEmail())).willReturn(List.of(testPostIt1, testPostIt2));
+        given(postItRepository.findAllByUserAccount_Email(userAccount.getEmail())).willReturn(List.of(postItEntity1, postItEntity2));
 
         //when
         var postItList = sut.getAllPostIt(UserAccountDto.from(userAccount));
@@ -76,11 +82,10 @@ class PostItServiceTest {
     @Test
     void givenPostItDeleteRequest_whenUpdatePostIt_thenReturnPostItDtoList() {
         //given
-        PostIt testPostIt1 = PostIt.of("test1", userAccount);
-        given(postItRepository.saveAll(List.of(testPostIt1))).willReturn(List.of(testPostIt1));
+        given(postItRepository.saveAll(List.of(postItEntity1))).willReturn(List.of(postItEntity1));
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
         //when
-        var postItList = sut.updatePostIt(List.of(PostItDto.from(testPostIt1)) ,UserAccountDto.from(userAccount));
+        var postItList = sut.updatePostIt(List.of(PostItDto.from(postItEntity1)) ,UserAccountDto.from(userAccount));
 
         //then
         verify(postItRepository).saveAll(any());

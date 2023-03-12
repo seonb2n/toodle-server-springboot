@@ -1,6 +1,7 @@
 package com.example.toodle_server_springboot.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,6 +24,7 @@ public abstract class BaseEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @Setter
     protected LocalDateTime createdAt; // 생성일시
 
     @CreatedBy
