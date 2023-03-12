@@ -57,4 +57,34 @@ class UserAccountServiceTest {
         //when & then
         assertThrows(CustomException.class,() -> sut.registerUser(email, password, nickname));
     }
+
+    @DisplayName("UserEmail 을 바탕으로 사용자 Dto 를 가져온다.")
+    @Test
+    void given_when_then() {
+        //given
+        String testEmail = "test-email";
+        UserAccount userAccount = UserAccount.of(testEmail, "test-name", "test-pwd");
+        given(userAccountRepository.findUserAccountByEmail(testEmail)).willReturn(Optional.of(userAccount));
+
+        //when
+        var result = sut.findUserAccountDto(testEmail);
+
+        //then
+        assertNotNull(result.get());
+    }
+
+    @DisplayName("UserEmail 을 바탕으로 사용자를 조회한다.")
+    @Test
+    void givenUserEmail_whenFindUser_thenReturnUserEntity() {
+        //given
+        String testEmail = "test-email";
+        UserAccount userAccount = UserAccount.of(testEmail, "test-name", "test-pwd");
+        given(userAccountRepository.findUserAccountByEmail(testEmail)).willReturn(Optional.of(userAccount));
+
+        //when
+        var result = sut.findUserAccount(testEmail);
+
+        //then
+        assertEquals(testEmail, result.getEmail());
+    }
 }

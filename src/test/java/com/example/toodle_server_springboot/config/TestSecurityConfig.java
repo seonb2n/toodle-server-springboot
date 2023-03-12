@@ -23,7 +23,7 @@ public class TestSecurityConfig {
      */
     @BeforeTestMethod
     public void securitySetUp() {
-        given(userAccountService.searchUser(anyString()))
+        given(userAccountService.findUserAccountDto(anyString()))
                 .willReturn(Optional.of(createUserAccountDto()));
         given(userAccountService.registerUser(anyString(), anyString(), anyString()))
                 .willReturn(createUserAccountDto());

@@ -24,6 +24,7 @@ public class UserAccountService {
      * @param userPassword
      * @return
      */
+    @Transactional
     public UserAccountDto registerUser(String userEmail, String userPassword, String userNickname) {
         var preUserAccount = userAccountRepository.findUserAccountByEmail(userEmail);
         if (preUserAccount.isPresent()) {
@@ -36,12 +37,22 @@ public class UserAccountService {
     }
 
     /**
-     * UserEmail 을 사용해서 DB 로부터 사용자 데이터를 가져오는 메서드
+     * UserEmail 을 사용해서 UserAccountDto 를 가져오는 메서드
      * @param userEmail
      * @return
      */
     @Transactional(readOnly = true)
-    public Optional<UserAccountDto> searchUser(String userEmail) {
+    public Optional<UserAccountDto> findUserAccountDto(String userEmail) {
         return userAccountRepository.findUserAccountByEmail(userEmail).map(UserAccountDto::from);
+    }
+
+    /**
+     * UserEmail 을 사용해서 Entity 를 가져오는 메서드
+     * @param userEmail
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public UserAccount findUserAccount(String userEmail) {
+        return userAccountRepository.findUserAccountByEmail(userEmail).orElseThrow();
     }
 }
