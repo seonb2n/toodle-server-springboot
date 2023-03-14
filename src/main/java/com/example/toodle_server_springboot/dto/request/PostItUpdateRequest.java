@@ -8,7 +8,7 @@ public record PostItUpdateRequest(
         List<PostItDto> postItDtoList
 ) {
 
-    public PostItUpdateRequest of(List<PostItDto> postItDtoList) {
+    public static PostItUpdateRequest of(List<PostItDto> postItDtoList) {
         return new PostItUpdateRequest(postItDtoList);
     }
 

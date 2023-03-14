@@ -2,7 +2,9 @@ package com.example.toodle_server_springboot.controller;
 
 import com.example.toodle_server_springboot.config.TestSecurityConfig;
 import com.example.toodle_server_springboot.dto.PostItDto;
+import com.example.toodle_server_springboot.dto.request.PostItUpdateRequest;
 import com.example.toodle_server_springboot.service.PostItService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 포스트잇")
@@ -29,12 +32,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostItControllerTest {
 
     private final MockMvc mvc;
+    private final ObjectMapper objectMapper;
     @MockBean private PostItService postItService;
 
     PostItControllerTest(
-            @Autowired MockMvc mvc
+            @Autowired MockMvc mvc,
+            @Autowired ObjectMapper objectMapper
     ) {
         this.mvc = mvc;
+        this.objectMapper = objectMapper;
     }
 
     @DisplayName("[GET] 포스트잇 조회 페이지 - 인증 없을 땐 401 unAuthorized")
@@ -67,6 +73,28 @@ class PostItControllerTest {
 
         //then
         then(postItService).should().getAllPostIt(any());
+    }
+
+    @WithUserDetails(value = "sbkim@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("[POST] 포스트잇 업데이트 페이지 - 정상 호출, 인증된 사용자")
+    @Test
+    void given_when_then() throws Exception {
+        //given
+        PostItDto testPostItDto = createPostIt("test", false);
+        var postItUpdateRequest = objectMapper.writeValueAsString(PostItUpdateRequest.of(List.of(testPostItDto)));
+        given(postItService.updatePostIt(any(), any())).willReturn(List.of(testPostItDto));
+
+        //when
+        mvc.perform(post("/api/v1/postits/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(postItUpdateRequest)
+                )
+                .andExpect(status().isOk())
+        ;
+
+        //then
+        then(postItService).should().updatePostIt(any(), any());
     }
 
     public PostItDto createPostIt(String content, boolean isDone) {
