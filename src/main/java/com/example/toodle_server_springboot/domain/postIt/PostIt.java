@@ -29,6 +29,11 @@ public class PostIt extends BaseEntity {
     private UserAccount userAccount;
 
     @Setter
+    @JoinColumn(name = "postITCategoryId")
+    @ManyToOne(optional = false)
+    private PostICategory postICategory;
+
+    @Setter
     @Column(name = "postit_content")
     private String content;
 
