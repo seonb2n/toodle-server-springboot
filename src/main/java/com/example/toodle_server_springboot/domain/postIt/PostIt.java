@@ -29,7 +29,7 @@ public class PostIt extends BaseEntity {
     private UserAccount userAccount;
 
     @Setter
-    @JoinColumn(name = "postITCategoryId")
+    @JoinColumn(name = "postit_category_id")
     @ManyToOne(optional = false)
     private PostICategory postICategory;
 

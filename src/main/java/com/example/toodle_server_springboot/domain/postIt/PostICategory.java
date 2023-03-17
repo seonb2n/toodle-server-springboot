@@ -8,9 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -30,9 +28,8 @@ public class PostICategory extends BaseEntity {
     @ManyToOne(optional = false)
     private UserAccount userAccount;
 
-    @OneToMany
-    private Set<PostIt> postItSet;
-
+    @Setter
+    @Column(name = "postit_category_title")
     private String title;
 
     protected PostICategory() {}
@@ -40,7 +37,6 @@ public class PostICategory extends BaseEntity {
     private PostICategory(String title, UserAccount userAccount) {
         this.title = title;
         this.userAccount = userAccount;
-        this.postItSet = new LinkedHashSet<>();
     }
 
     public static PostICategory of(String title, UserAccount userAccount) {
