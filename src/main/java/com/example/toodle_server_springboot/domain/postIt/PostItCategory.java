@@ -15,7 +15,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "tb_postit_category")
-public class PostICategory extends BaseEntity {
+public class PostItCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -32,22 +32,22 @@ public class PostICategory extends BaseEntity {
     @Column(name = "postit_category_title")
     private String title;
 
-    protected PostICategory() {}
+    protected PostItCategory() {}
 
-    private PostICategory(String title, UserAccount userAccount) {
+    private PostItCategory(String title, UserAccount userAccount) {
         this.title = title;
         this.userAccount = userAccount;
     }
 
-    public static PostICategory of(String title, UserAccount userAccount) {
-        return new PostICategory(title, userAccount);
+    public static PostItCategory of(String title, UserAccount userAccount) {
+        return new PostItCategory(title, userAccount);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PostICategory that = (PostICategory) o;
+        PostItCategory that = (PostItCategory) o;
         return Objects.equals(postITCategoryId, that.postITCategoryId) && Objects.equals(title, that.title);
     }
 

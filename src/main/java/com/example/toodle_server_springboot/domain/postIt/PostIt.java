@@ -31,7 +31,7 @@ public class PostIt extends BaseEntity {
     @Setter
     @JoinColumn(name = "postit_category_id")
     @ManyToOne(optional = false)
-    private PostICategory postICategory;
+    private PostItCategory postICategory;
 
     @Setter
     @Column(name = "postit_content")

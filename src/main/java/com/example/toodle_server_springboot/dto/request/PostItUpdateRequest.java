@@ -1,6 +1,6 @@
 package com.example.toodle_server_springboot.dto.request;
 
-import com.example.toodle_server_springboot.dto.PostItDto;
+import com.example.toodle_server_springboot.dto.postit.PostItDto;
 
 import java.util.List;
 

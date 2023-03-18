@@ -1,7 +1,7 @@
 package com.example.toodle_server_springboot.controller;
 
 import com.example.toodle_server_springboot.config.TestSecurityConfig;
-import com.example.toodle_server_springboot.dto.PostItDto;
+import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import com.example.toodle_server_springboot.dto.request.PostItUpdateRequest;
 import com.example.toodle_server_springboot.service.PostItService;
 import com.fasterxml.jackson.databind.ObjectMapper;

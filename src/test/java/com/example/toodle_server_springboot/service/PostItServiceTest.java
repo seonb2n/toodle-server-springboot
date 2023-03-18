@@ -2,8 +2,8 @@ package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
-import com.example.toodle_server_springboot.dto.PostItDto;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
+import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import org.junit.jupiter.api.BeforeEach;

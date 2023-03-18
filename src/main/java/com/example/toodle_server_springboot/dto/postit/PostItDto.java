@@ -1,4 +1,4 @@
-package com.example.toodle_server_springboot.dto;
+package com.example.toodle_server_springboot.dto.postit;
 
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
