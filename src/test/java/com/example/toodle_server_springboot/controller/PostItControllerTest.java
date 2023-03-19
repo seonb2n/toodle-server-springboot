@@ -1,6 +1,7 @@
 package com.example.toodle_server_springboot.controller;
 
 import com.example.toodle_server_springboot.config.TestSecurityConfig;
+import com.example.toodle_server_springboot.dto.postit.PostItCategoryDto;
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import com.example.toodle_server_springboot.dto.request.PostItUpdateRequest;
 import com.example.toodle_server_springboot.service.PostItService;
@@ -97,7 +98,12 @@ class PostItControllerTest {
         then(postItService).should().updatePostIt(any(), any());
     }
 
+    public PostItCategoryDto createPostItCategoryDto(String title) {
+        return PostItCategoryDto.of(title);
+    }
+
     public PostItDto createPostIt(String content, boolean isDone) {
-        return PostItDto.of(content, isDone);
+        PostItCategoryDto categoryDto = createPostItCategoryDto("test-postit-categoriy");
+        return PostItDto.of(categoryDto, content, isDone);
     }
 }

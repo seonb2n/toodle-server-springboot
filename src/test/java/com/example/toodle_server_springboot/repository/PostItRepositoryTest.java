@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.repository;
 
 import com.example.toodle_server_springboot.config.TestJpaConfig;
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
+import com.example.toodle_server_springboot.domain.postIt.PostItCategory;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,20 +24,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PostItRepositoryTest {
 
     private final PostItRepository postItRepository;
+    private final PostItCategoryRepository postItCategoryRepository;
     private final UserAccountRepository userAccountRepository;
     private static UserAccount userAccount;
+    private static PostItCategory category;
 
     PostItRepositoryTest(
             @Autowired PostItRepository postItRepository,
+            @Autowired PostItCategoryRepository postItCategoryRepository,
             @Autowired UserAccountRepository userAccountRepository
     ) {
         this.postItRepository = postItRepository;
+        this.postItCategoryRepository = postItCategoryRepository;
         this.userAccountRepository = userAccountRepository;
     }
 
     @BeforeEach
     void setUp() {
         userAccount = userAccountRepository.save(UserAccount.of("testEmail", "testName", "testPw"));
+        category = postItCategoryRepository.save(PostItCategory.of("test-postit-category", userAccount));
     }
 
     @DisplayName("postIt 생성 test")
@@ -44,6 +50,7 @@ class PostItRepositoryTest {
     void givenPostIt_whenInserting_thenReturnPostIt() {
         //given
         PostIt postIt = PostIt.of("content", userAccount);
+        postIt.setPostICategory(category);
 
         //when
         var savedPostIt = postItRepository.save(postIt);
@@ -58,6 +65,8 @@ class PostItRepositoryTest {
         //given
         PostIt postIt1 = PostIt.of("content", userAccount);
         PostIt postIt2 = PostIt.of("content", userAccount);
+        postIt1.setPostICategory(category);
+        postIt2.setPostICategory(category);
         var postItList = postItRepository.saveAll(List.of(postIt1, postIt2));
 
         //when

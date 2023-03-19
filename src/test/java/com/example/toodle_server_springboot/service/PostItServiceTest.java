@@ -1,6 +1,7 @@
 package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
+import com.example.toodle_server_springboot.domain.postIt.PostItCategory;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
@@ -44,10 +45,13 @@ class PostItServiceTest {
     @BeforeEach
     void init() {
         userAccount = UserAccount.of(testEmail, testNickName, testPwd);
+        PostItCategory category = PostItCategory.of("test-postit-category", userAccount);
         postItEntity1 = PostIt.of("test1", userAccount);
         postItEntity1.setCreatedAt(LocalDateTime.now());
+        postItEntity1.setPostICategory(category);
         postItEntity2 = PostIt.of("test1", userAccount);
         postItEntity2.setCreatedAt(LocalDateTime.now());
+        postItEntity2.setPostICategory(category);
     }
 
     @DisplayName("포스트잇 등록 테스트 - 성공")
