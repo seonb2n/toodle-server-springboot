@@ -12,12 +12,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("포스트잇 JPA 연결 태스트")
 @DataJpaTest
@@ -103,21 +104,24 @@ class PostItRepositoryTest {
 
     @DisplayName("postItCategory 를 삭제하는 경우, postIt 이 고아 객체로 남는지 test")
     @Test
+    @Rollback(value = false)
     public void givenNothing_whenDeletePostItCategory_thenReturnOrphanPostItList() throws Exception {
         //given
         PostItCategory deleteCategory = PostItCategory.of("test-postit-category2", userAccount);
-        em.persist(deleteCategory);
+        postItCategoryRepository.save(deleteCategory);
         PostIt postIt1 = PostIt.of("content", userAccount);
-        postIt1.setPostICategory(category);
-        em.persist(postIt1);
+        postIt1.setPostICategory(deleteCategory);
+        postItRepository.save(postIt1);
 
         //when
-        postItCategoryRepository.delete(category);
+        postItCategoryRepository.delete(deleteCategory);
         em.flush();
-        var savedPostIt = em.find(PostIt.class, postIt1.getPostItId());
+        em.clear();
+        var savedPostIt = postItRepository.findById(postIt1.getPostItId());
 
         //then
-        assertNull(savedPostIt.getPostICategory());
+        assertNotNull(savedPostIt.get().getPostICategory());
+        assertEquals(true, savedPostIt.get().getPostICategory().isDeleted());
     }
 
 }
