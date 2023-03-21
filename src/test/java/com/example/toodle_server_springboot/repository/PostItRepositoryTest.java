@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DisplayName("포스트잇 JPA 연결 태스트")
 @DataJpaTest
@@ -26,17 +28,20 @@ class PostItRepositoryTest {
     private final PostItRepository postItRepository;
     private final PostItCategoryRepository postItCategoryRepository;
     private final UserAccountRepository userAccountRepository;
+    private final TestEntityManager em;
     private static UserAccount userAccount;
     private static PostItCategory category;
 
     PostItRepositoryTest(
             @Autowired PostItRepository postItRepository,
             @Autowired PostItCategoryRepository postItCategoryRepository,
-            @Autowired UserAccountRepository userAccountRepository
+            @Autowired UserAccountRepository userAccountRepository,
+            @Autowired TestEntityManager em
     ) {
         this.postItRepository = postItRepository;
         this.postItCategoryRepository = postItCategoryRepository;
         this.userAccountRepository = userAccountRepository;
+        this.em = em;
     }
 
     @BeforeEach
@@ -77,6 +82,42 @@ class PostItRepositoryTest {
         assertEquals(2, postItList.size());
         assertEquals(2, updatedPostItList.size());
         assertThat(updatedPostItList.get(0).getContent()).contains("update");
+    }
+
+    @DisplayName("postItCategory 로 포스트잇의 조회가 가능한지 test")
+    @Test
+    public void givenPostItCategory_whenFindPostItCategory_thenReturnPostItList() throws Exception {
+        //given
+        PostIt postIt1 = PostIt.of("content", userAccount);
+        PostIt postIt2 = PostIt.of("content", userAccount);
+        postIt1.setPostICategory(category);
+        postIt2.setPostICategory(category);
+        postItRepository.saveAll(List.of(postIt1, postIt2));
+
+        //when
+        var savedPostItList = postItRepository.findAllByPostICategoryAndUserAccount_Email(category, userAccount.getEmail());
+
+        //then
+        assertEquals(2, savedPostItList.size());
+    }
+
+    @DisplayName("postItCategory 를 삭제하는 경우, postIt 이 고아 객체로 남는지 test")
+    @Test
+    public void givenNothing_whenDeletePostItCategory_thenReturnOrphanPostItList() throws Exception {
+        //given
+        PostItCategory deleteCategory = PostItCategory.of("test-postit-category2", userAccount);
+        em.persist(deleteCategory);
+        PostIt postIt1 = PostIt.of("content", userAccount);
+        postIt1.setPostICategory(category);
+        em.persist(postIt1);
+
+        //when
+        postItCategoryRepository.delete(category);
+        em.flush();
+        var savedPostIt = em.find(PostIt.class, postIt1.getPostItId());
+
+        //then
+        assertNull(savedPostIt.getPostICategory());
     }
 
 }

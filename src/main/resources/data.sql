@@ -3,8 +3,8 @@ insert into user_account (user_id, user_email, user_nickname, user_password,  cr
 (1, 'sbkim@naver.com', 'sbKim', '{noop}1q2w3e4r!',  now(), 'TEST', now(), 'TEST');
 
 -- sbkim이 가진 포스트잇 카테고리
-insert into tb_postit_category (postit_category_id, created_at, created_by, modified_at, modified_by, postit_category_title, user_id)
-values ('02e4dd01-a94a-4bd1-9069-7b3fdfee04fe', now(), 'sbkim', now(), 'sbkim', '운동', 1);
+insert into tb_postit_category (postit_category_id, created_at, created_by, modified_at, modified_by, postit_category_title, deleted, user_id)
+values ('02e4dd01-a94a-4bd1-9069-7b3fdfee04fe', now(), 'sbkim', now(), 'sbkim', '운동', false, 1);
 
 -- sbkim이 가진 포스트잇
 insert into tb_postit (postit_id, created_at, created_by, modified_at, modified_by, postit_content, postit_is_done, user_id, postit_category_id)

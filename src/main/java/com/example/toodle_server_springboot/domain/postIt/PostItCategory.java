@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "tb_postit_category")
+@SQLDelete(sql = "UPDATE tb_postit_category SET deleted = true where postit_category_id = ?")
 public class PostItCategory extends BaseEntity {
 
     @Id
@@ -31,6 +33,8 @@ public class PostItCategory extends BaseEntity {
     @Setter
     @Column(name = "postit_category_title")
     private String title;
+
+    private boolean deleted = Boolean.FALSE;
 
     protected PostItCategory() {}
 
