@@ -124,4 +124,21 @@ class PostItRepositoryTest {
         assertEquals(true, savedPostIt.get().getPostICategory().isDeleted());
     }
 
+    @DisplayName("postItCategory 을 조회한다. 삭제된 포스트잇은 조회되지 않는다.")
+    @Test
+    public void givenUserAccount_whenFindPostItCategoryList_thenReturnExistPostItCategory() throws Exception {
+        //given
+        PostItCategory deleteCategory = PostItCategory.of("test-postit-category2", userAccount);
+        postItCategoryRepository.save(deleteCategory);
+        postItCategoryRepository.delete(deleteCategory);
+        em.flush();
+        em.clear();
+
+        //when
+        var postItList = postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(userAccount.getEmail());
+
+        //then
+        assertEquals(2, postItList.size());
+    }
+
 }
