@@ -117,6 +117,7 @@ class PostItRepositoryTest {
         postItCategoryRepository.delete(deleteCategory);
         em.flush();
         em.clear();
+        //var savedPostIt = em.find(PostIt.class, postIt1.getPostItId());
         var savedPostIt = postItRepository.findById(postIt1.getPostItId());
 
         //then
