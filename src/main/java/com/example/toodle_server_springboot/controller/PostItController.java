@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.controller;
 
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import com.example.toodle_server_springboot.dto.request.PostItUpdateRequest;
+import com.example.toodle_server_springboot.dto.response.PostItListPageResponse;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.PostItService;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,12 @@ public class PostItController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<PostItDto>> findAllPostIt(
+    public ResponseEntity<PostItListPageResponse> findAllPostIt(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
+        var postItCategoryDtoList = postItService.getAllPostItCategory(userPrincipal.toDto());
         var postItDtoList = postItService.getAllPostIt(userPrincipal.toDto());
-        return ResponseEntity.ok(postItDtoList);
+        return ResponseEntity.ok(PostItListPageResponse.of(postItCategoryDtoList, postItDtoList));
     }
 
     /**

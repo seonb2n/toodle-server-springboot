@@ -79,7 +79,7 @@ class PostItControllerTest {
     @WithUserDetails(value = "sbkim@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[POST] 포스트잇 업데이트 페이지 - 정상 호출, 인증된 사용자")
     @Test
-    void given_when_then() throws Exception {
+    void givenPostItUpdate_whenUpdatePostIt_thenReturnUpdatedPostIt() throws Exception {
         //given
         PostItDto testPostItDto = createPostIt("test", false);
         var postItUpdateRequest = objectMapper.writeValueAsString(PostItUpdateRequest.of(List.of(testPostItDto)));

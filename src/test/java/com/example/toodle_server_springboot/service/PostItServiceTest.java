@@ -84,6 +84,21 @@ class PostItServiceTest {
         assertEquals(2, postItList.size());
     }
 
+    @DisplayName("포스트잇 카테고리 조회 테스트")
+    @Test
+    void givenUserAccount_whenFindPostItCategory_thenReturnPostItCategoryDtoList() {
+        //given
+        PostItCategory postItCategory = PostItCategory.of("test-category", userAccount);
+        given(postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(userAccount.getEmail())).willReturn(List.of(postItCategory));
+
+        //when
+        var postItCategoryList = sut.getAllPostItCategory(UserAccountDto.from(userAccount));
+
+        //then
+        verify(postItCategoryRepository).findAllByUserAccount_EmailAndDeletedFalse(any());
+        assertEquals(1, postItCategoryList.size());
+    }
+
     @DisplayName("포스트잇 업데이트 로직 테스트")
     @Test
     void givenPostItDeleteRequest_whenUpdatePostIt_thenReturnPostItDtoList() {

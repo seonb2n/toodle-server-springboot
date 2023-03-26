@@ -3,7 +3,9 @@ package com.example.toodle_server_springboot.service;
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
+import com.example.toodle_server_springboot.dto.postit.PostItCategoryDto;
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
+import com.example.toodle_server_springboot.repository.PostItCategoryRepository;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 public class PostItService {
 
     private final PostItRepository postItRepository;
+    private final PostItCategoryRepository postItCategoryRepository;
     private final UserAccountRepository userAccountRepository;
 
     /**
@@ -40,6 +43,16 @@ public class PostItService {
     @Transactional(readOnly = true)
     public List<PostItDto> getAllPostIt(UserAccountDto userAccountDto) {
         return postItRepository.findAllByUserAccount_Email(userAccountDto.email()).stream().map(PostItDto::from).toList();
+    }
+
+    /**
+     * 사용자 계정이 가진 삭제되지 않은 PostItCategory 를 찾는 서비스
+     * @param userAccountDto
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<PostItCategoryDto> getAllPostItCategory(UserAccountDto userAccountDto) {
+        return postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(userAccountDto.email()).stream().map(PostItCategoryDto::from).toList();
     }
 
     /**
