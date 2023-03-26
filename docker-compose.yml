@@ -1,0 +1,30 @@
+# postgre 이미지와 서버 이미지를 같이 docker-compose 로 실행해서 둘 사이에 통신을 열어주자.
+#
+# https://stackoverflow.com/questions/37482716/using-docker-to-launch-web-app-cant-connect-to-postgresql-db
+#  web:
+#    build: ./web
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - app-db
+#    environment:
+#      - MYAPP_JDBC_URL=jdbc:postgresql://app-db:5432/somedb
+#      - MYAPP_JDBC_USER=someuser
+#      - MYAPP_JDBC_PASS=pass
+#
+#  app-db:
+#    image: postgres:9.6
+#    environment:
+#      - POSTGRES_USER=someuser
+#      - POSTGRES_PASSWORD=pass
+#      - POSTGRES_DB=somedb
+#    expose:
+#      - 5432
+#    volumes_from:
+#      - app-db-data
+#
+#  app-db-data:
+#    image: cogniteev/echo
+#    command: echo 'Data Container for PostgreSQL'
+#    volumes:
+#      - /opt/postgresdata/:/var/lib/postgresql/data
