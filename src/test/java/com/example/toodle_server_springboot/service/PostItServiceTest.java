@@ -5,6 +5,7 @@ import com.example.toodle_server_springboot.domain.postIt.PostItCategory;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
+import com.example.toodle_server_springboot.repository.PostItCategoryRepository;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,7 @@ class PostItServiceTest {
     @InjectMocks private PostItService sut;
 
     @Mock private PostItRepository postItRepository;
+    @Mock private PostItCategoryRepository postItCategoryRepository;
     @Mock private UserAccountRepository userAccountRepository;
 
     private static UserAccount userAccount;
