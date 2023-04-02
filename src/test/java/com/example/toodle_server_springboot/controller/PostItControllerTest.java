@@ -81,8 +81,9 @@ class PostItControllerTest {
     @Test
     void givenPostItUpdate_whenUpdatePostIt_thenReturnUpdatedPostIt() throws Exception {
         //given
+        PostItCategoryDto testCategoryDto = createPostItCategoryDto("test-category");
         PostItDto testPostItDto = createPostIt("test", false);
-        var postItUpdateRequest = objectMapper.writeValueAsString(PostItUpdateRequest.of(List.of(testPostItDto)));
+        var postItUpdateRequest = objectMapper.writeValueAsString(PostItUpdateRequest.of(List.of(testCategoryDto),List.of(testPostItDto)));
         given(postItService.updatePostIt(any(), any())).willReturn(List.of(testPostItDto));
 
         //when
