@@ -44,7 +44,10 @@ public class PostItController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody PostItUpdateRequest updateRequest
             ) {
-        var updatedPostItDtoList = postItService.updatePostIt(updateRequest.getPostItDtoList(), userPrincipal.toDto());
+        var updatedPostItDtoList = postItService.updatePostIt(
+                updateRequest.postItCategoryDtoList(),
+                updateRequest.getPostItDtoList(),
+                userPrincipal.toDto());
         return ResponseEntity.ok(updatedPostItDtoList);
     }
 

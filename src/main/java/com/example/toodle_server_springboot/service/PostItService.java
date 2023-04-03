@@ -61,12 +61,12 @@ public class PostItService {
      * @param userAccountDto
      * @return
      */
-    public List<PostItDto> updatePostIt(List<PostItDto> postItDtoLIst, UserAccountDto userAccountDto) {
-        // 원래 갖고 있던 포스트잇을 삭제한다
-        // todo soft delete 와 hard delete 중 뭐가 더 좋을까?
-        postItRepository.deleteAllByUserAccount_Email(userAccountDto.email());
-        // 새로운 포스트잇 리스트로 업데이트한다
+    public List<PostItDto> updatePostIt(
+            List<PostItCategoryDto> postItCategoryDtoList,
+            List<PostItDto> postItDtoLIst,
+            UserAccountDto userAccountDto) {
         var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email()).orElseThrow();
+        postItCategoryRepository.saveAll(postItCategoryDtoList.stream().map(it -> it.toEntity(userAccount)).toList());
         var updatePostItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccount)).toList();
         return postItRepository.saveAll(updatePostItList).stream().map(PostItDto::from).toList();
     }

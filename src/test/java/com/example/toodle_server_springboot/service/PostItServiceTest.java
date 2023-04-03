@@ -106,9 +106,10 @@ class PostItServiceTest {
         given(postItRepository.saveAll(List.of(postItEntity1))).willReturn(List.of(postItEntity1));
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
         //when
-        var postItList = sut.updatePostIt(List.of(PostItDto.from(postItEntity1)) ,UserAccountDto.from(userAccount));
+        var postItList = sut.updatePostIt(List.of(), List.of(PostItDto.from(postItEntity1)) ,UserAccountDto.from(userAccount));
 
         //then
+        verify(postItCategoryRepository).saveAll(any());
         verify(postItRepository).saveAll(any());
         assertEquals(1, postItList.size());
     }

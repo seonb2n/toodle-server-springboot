@@ -84,7 +84,7 @@ class PostItControllerTest {
         PostItCategoryDto testCategoryDto = createPostItCategoryDto("test-category");
         PostItDto testPostItDto = createPostIt("test", false);
         var postItUpdateRequest = objectMapper.writeValueAsString(PostItUpdateRequest.of(List.of(testCategoryDto),List.of(testPostItDto)));
-        given(postItService.updatePostIt(any(), any())).willReturn(List.of(testPostItDto));
+        given(postItService.updatePostIt(any(), any(), any())).willReturn(List.of(testPostItDto));
 
         //when
         mvc.perform(post("/api/v1/postits/update")
@@ -96,7 +96,7 @@ class PostItControllerTest {
         ;
 
         //then
-        then(postItService).should().updatePostIt(any(), any());
+        then(postItService).should().updatePostIt(any(), any(), any());
     }
 
     public PostItCategoryDto createPostItCategoryDto(String title) {
