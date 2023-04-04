@@ -1,6 +1,7 @@
 package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.domain.postIt.PostIt;
+import com.example.toodle_server_springboot.domain.postIt.PostItCategory;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.dto.postit.PostItCategoryDto;
@@ -57,6 +58,7 @@ public class PostItService {
 
     /**
      * 수정된 포스트잇 리스트로 업데이트
+     * @param postItCategoryDtoList
      * @param postItDtoLIst
      * @param userAccountDto
      * @return
@@ -66,8 +68,19 @@ public class PostItService {
             List<PostItDto> postItDtoLIst,
             UserAccountDto userAccountDto) {
         var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email()).orElseThrow();
-        postItCategoryRepository.saveAll(postItCategoryDtoList.stream().map(it -> it.toEntity(userAccount)).toList());
-        var updatePostItList = postItDtoLIst.stream().map(it -> it.toEntity(userAccount)).toList();
+        // 카테고리 생성
+        var updatedCategoryList = postItCategoryDtoList.stream().map(it ->
+                postItCategoryRepository.findById(it.postItCategoryId())
+                .orElse(PostItCategory.of(it.title(), userAccount))).toList();
+        postItCategoryRepository.saveAll(updatedCategoryList);
+
+        // 포스트잇 생성
+        var updatePostItList = postItDtoLIst.stream().map(it -> {
+            var postItTitle = it.categoryDto().title();
+            var category = postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItTitle).orElseThrow();
+            return postItRepository.findById(it.postItId())
+                    .orElse(PostIt.of(it.content(), category, userAccount));
+        }).toList();
         return postItRepository.saveAll(updatePostItList).stream().map(PostItDto::from).toList();
     }
 }

@@ -58,6 +58,12 @@ public class PostIt extends BaseEntity {
         return new PostIt(content, userAccount, isDone);
     }
 
+    public static PostIt of(String content, PostItCategory postItCategory, UserAccount userAccount) {
+        PostIt postIt =  new PostIt(content, userAccount, false);
+        postIt.setPostICategory(postItCategory);
+        return postIt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

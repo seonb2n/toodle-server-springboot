@@ -113,4 +113,16 @@ class PostItServiceTest {
         verify(postItRepository).saveAll(any());
         assertEquals(1, postItList.size());
     }
+
+    @DisplayName("포스트잇 카테고리 업데이트 로직 테스트")
+    @Test
+    void givenPostItCategoryUpdateRequest_whenUpdatePostItCategory_thenUpdatePostItCategory() {
+        //given
+
+
+        //when
+
+        //then
+
+    }
 }
