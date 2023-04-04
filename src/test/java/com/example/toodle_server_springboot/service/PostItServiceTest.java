@@ -4,6 +4,7 @@ import com.example.toodle_server_springboot.domain.postIt.PostIt;
 import com.example.toodle_server_springboot.domain.postIt.PostItCategory;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
+import com.example.toodle_server_springboot.dto.postit.PostItCategoryDto;
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import com.example.toodle_server_springboot.repository.PostItCategoryRepository;
 import com.example.toodle_server_springboot.repository.PostItRepository;
@@ -43,6 +44,9 @@ class PostItServiceTest {
     private static final String testPwd = "testPwd";
     private static PostIt postItEntity1;
     private static PostIt postItEntity2;
+    private static PostItCategory postItCategoryEntity1;
+    private static PostItCategory postItCategoryEntity2;
+
     
     @BeforeEach
     void init() {
@@ -54,6 +58,8 @@ class PostItServiceTest {
         postItEntity2 = PostIt.of("test1", userAccount);
         postItEntity2.setCreatedAt(LocalDateTime.now());
         postItEntity2.setPostICategory(category);
+        postItCategoryEntity1 = PostItCategory.of("test-category1", userAccount);
+        postItCategoryEntity2 = PostItCategory.of("test-category2", userAccount);
     }
 
     @DisplayName("포스트잇 등록 테스트 - 성공")
@@ -118,11 +124,24 @@ class PostItServiceTest {
     @Test
     void givenPostItCategoryUpdateRequest_whenUpdatePostItCategory_thenUpdatePostItCategory() {
         //given
+        PostItCategoryDto categoryDto1 = PostItCategoryDto.from(postItCategoryEntity1);
+        PostItCategoryDto categoryDto2 = PostItCategoryDto.from(postItCategoryEntity2);
+        PostItDto postItDto1 = PostItDto.of(categoryDto1, postItEntity1.getContent(), postItEntity1.isDone());
+        PostItDto postItDto2 = PostItDto.of(categoryDto2, postItEntity2.getContent(), postItEntity2.isDone());
 
+        given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
+        given(postItCategoryRepository.findById(categoryDto1.postItCategoryId())).willReturn(Optional.of(postItCategoryEntity1));
+        given(postItCategoryRepository.findById(categoryDto2.postItCategoryId())).willReturn(Optional.empty());
+        given(postItRepository.findById(postItEntity1.getPostItId())).willReturn(Optional.of(postItEntity1));
+        given(postItRepository.findById(postItEntity2.getPostItId())).willReturn(Optional.empty());
+        given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity1.getTitle())).willReturn(Optional.of(postItCategoryEntity1));
+        given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity2.getTitle())).willReturn(Optional.of(postItCategoryEntity2));
 
         //when
+        sut.updatePostIt(List.of(categoryDto1, categoryDto2), List.of(postItDto1, postItDto2), UserAccountDto.from(userAccount));
 
         //then
-
+        verify(postItRepository).saveAll(List.of(postItEntity1, postItEntity2));
+        verify(postItCategoryRepository).saveAll(List.of(postItCategoryEntity1, postItCategoryEntity2));
     }
 }
