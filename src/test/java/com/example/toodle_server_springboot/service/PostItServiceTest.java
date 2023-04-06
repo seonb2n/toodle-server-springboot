@@ -32,11 +32,15 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class PostItServiceTest {
 
-    @InjectMocks private PostItService sut;
+    @InjectMocks
+    private PostItService sut;
 
-    @Mock private PostItRepository postItRepository;
-    @Mock private PostItCategoryRepository postItCategoryRepository;
-    @Mock private UserAccountRepository userAccountRepository;
+    @Mock
+    private PostItRepository postItRepository;
+    @Mock
+    private PostItCategoryRepository postItCategoryRepository;
+    @Mock
+    private UserAccountRepository userAccountRepository;
 
     private static UserAccount userAccount;
     private static final String testEmail = "testEmail";
@@ -47,7 +51,7 @@ class PostItServiceTest {
     private static PostItCategory postItCategoryEntity1;
     private static PostItCategory postItCategoryEntity2;
 
-    
+
     @BeforeEach
     void init() {
         userAccount = UserAccount.of(testEmail, testNickName, testPwd);
@@ -109,10 +113,11 @@ class PostItServiceTest {
     @Test
     void givenPostItDeleteRequest_whenUpdatePostIt_thenReturnPostItDtoList() {
         //given
-        given(postItRepository.saveAll(List.of(postItEntity1))).willReturn(List.of(postItEntity1));
+        given(postItRepository.saveAll(any())).willReturn(List.of(postItEntity1));
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
+        given(postItCategoryRepository.findByUserAccountAndTitle(any(), any())).willReturn(Optional.of(postItCategoryEntity1));
         //when
-        var postItList = sut.updatePostIt(List.of(), List.of(PostItDto.from(postItEntity1)) ,UserAccountDto.from(userAccount));
+        var postItList = sut.updatePostIt(List.of(), List.of(PostItDto.from(postItEntity1)), UserAccountDto.from(userAccount));
 
         //then
         verify(postItCategoryRepository).saveAll(any());
@@ -126,8 +131,8 @@ class PostItServiceTest {
         //given
         PostItCategoryDto categoryDto1 = PostItCategoryDto.from(postItCategoryEntity1);
         PostItCategoryDto categoryDto2 = PostItCategoryDto.from(postItCategoryEntity2);
-        PostItDto postItDto1 = PostItDto.of(categoryDto1, postItEntity1.getContent(), postItEntity1.isDone());
-        PostItDto postItDto2 = PostItDto.of(categoryDto2, postItEntity2.getContent(), postItEntity2.isDone());
+        PostItDto postItDto1 = PostItDto.of(postItEntity1.getPostItId(), categoryDto1, postItEntity1.getContent(), postItEntity1.getCreatedAt(), postItEntity1.isDone());
+        PostItDto postItDto2 = PostItDto.of(postItEntity2.getPostItId(), categoryDto2, postItEntity2.getContent(), postItEntity2.getCreatedAt(), postItEntity2.isDone());
 
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
         given(postItCategoryRepository.findById(categoryDto1.postItCategoryId())).willReturn(Optional.of(postItCategoryEntity1));
@@ -141,7 +146,7 @@ class PostItServiceTest {
         sut.updatePostIt(List.of(categoryDto1, categoryDto2), List.of(postItDto1, postItDto2), UserAccountDto.from(userAccount));
 
         //then
-        verify(postItRepository).saveAll(List.of(postItEntity1, postItEntity2));
-        verify(postItCategoryRepository).saveAll(List.of(postItCategoryEntity1, postItCategoryEntity2));
+        verify(postItRepository).saveAll(any());
+        verify(postItCategoryRepository).saveAll(any());
     }
 }

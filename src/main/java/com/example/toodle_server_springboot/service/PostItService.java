@@ -26,6 +26,7 @@ public class PostItService {
 
     /**
      * PostIt 저장하는 메서드
+     *
      * @param userAccount
      * @param content
      * @param isDone
@@ -38,6 +39,7 @@ public class PostItService {
 
     /**
      * 사용자 계정이 가진 모든 PostIt 을 찾는 서비스
+     *
      * @param userAccountDto
      * @return
      */
@@ -48,6 +50,7 @@ public class PostItService {
 
     /**
      * 사용자 계정이 가진 삭제되지 않은 PostItCategory 를 찾는 서비스
+     *
      * @param userAccountDto
      * @return
      */
@@ -58,6 +61,7 @@ public class PostItService {
 
     /**
      * 수정된 포스트잇 리스트로 업데이트
+     *
      * @param postItCategoryDtoList
      * @param postItDtoLIst
      * @param userAccountDto
@@ -71,7 +75,7 @@ public class PostItService {
         // 카테고리 생성
         var updatedCategoryList = postItCategoryDtoList.stream().map(it ->
                 postItCategoryRepository.findById(it.postItCategoryId())
-                .orElse(PostItCategory.of(it.title(), userAccount))).toList();
+                        .orElse(PostItCategory.of(it.postItCategoryId(), it.title(), userAccount))).toList();
         postItCategoryRepository.saveAll(updatedCategoryList);
 
         // 포스트잇 생성
@@ -80,7 +84,7 @@ public class PostItService {
             //todo 새로운 카테고리를 할당할 때, title 로 검색되는 것은 안전하지 않다.
             var category = postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItTitle).orElseThrow();
             return postItRepository.findById(it.postItId())
-                    .orElse(PostIt.of(it.content(), category, userAccount));
+                    .orElse(PostIt.of(it.postItId(), it.content(), category, userAccount, it.isDone()));
         }).toList();
         return postItRepository.saveAll(updatePostItList).stream().map(PostItDto::from).toList();
     }
