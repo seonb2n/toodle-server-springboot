@@ -77,6 +77,7 @@ public class PostItService {
         // 포스트잇 생성
         var updatePostItList = postItDtoLIst.stream().map(it -> {
             var postItTitle = it.categoryDto().title();
+            //todo 새로운 카테고리를 할당할 때, title 로 검색되는 것은 안전하지 않다.
             var category = postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItTitle).orElseThrow();
             return postItRepository.findById(it.postItId())
                     .orElse(PostIt.of(it.content(), category, userAccount));
