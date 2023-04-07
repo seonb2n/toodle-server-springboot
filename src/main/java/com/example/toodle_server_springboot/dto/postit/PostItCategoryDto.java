@@ -20,7 +20,7 @@ public record PostItCategoryDto(
 
     public static PostItCategoryDto from(PostItCategory postItCategory) {
         return PostItCategoryDto.of(
-                postItCategory.getPostITCategoryId(),
+                postItCategory.getPostItCategoryClientId(),
                 postItCategory.getTitle()
         );
     }

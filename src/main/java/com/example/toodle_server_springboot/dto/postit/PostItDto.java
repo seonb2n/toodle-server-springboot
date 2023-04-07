@@ -27,7 +27,7 @@ public record PostItDto(
 
     public static PostItDto from(PostIt postIt) {
         return PostItDto.of(
-                postIt.getPostItId(),
+                postIt.getPostItClientId(),
                 PostItCategoryDto.from(postIt.getPostICategory()),
                 postIt.getContent(),
                 postIt.getCreatedAt(),

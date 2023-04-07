@@ -5,6 +5,7 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -17,10 +18,16 @@ import java.util.UUID;
 public class PostIt extends BaseEntity {
 
     @Id
-//    @GeneratedValue(generator = "uuid2")
-//    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "postit_id")
     private UUID postItId;
+
+
+    @Setter
+    @Column(name = "postit_client_id")
+    private UUID postItClientId;
+
 
     @Setter
     @JoinColumn(name = "userId")
@@ -48,7 +55,7 @@ public class PostIt extends BaseEntity {
         this.content = content;
         this.userAccount = userAccount;
         this.isDone = isDone;
-        this.postItId = UUID.randomUUID();
+        this.postItClientId = UUID.randomUUID();
     }
 
     public static PostIt of(String content, UserAccount userAccount) {
@@ -65,15 +72,11 @@ public class PostIt extends BaseEntity {
         return postIt;
     }
 
-    public static PostIt of(UUID postItId, String content, PostItCategory postItCategory, UserAccount userAccount, boolean isDone) {
+    public static PostIt of(UUID postItClientId, String content, PostItCategory postItCategory, UserAccount userAccount, boolean isDone) {
         PostIt postIt = new PostIt(content, userAccount, isDone);
         postIt.setPostICategory(postItCategory);
-        postIt.setPostItId(postItId);
+        postIt.setPostItClientId(postItClientId);
         return postIt;
-    }
-
-    private void setPostItId(UUID postItId) {
-        this.postItId = postItId;
     }
 
     @Override

@@ -131,14 +131,14 @@ class PostItServiceTest {
         //given
         PostItCategoryDto categoryDto1 = PostItCategoryDto.from(postItCategoryEntity1);
         PostItCategoryDto categoryDto2 = PostItCategoryDto.from(postItCategoryEntity2);
-        PostItDto postItDto1 = PostItDto.of(postItEntity1.getPostItId(), categoryDto1, postItEntity1.getContent(), postItEntity1.getCreatedAt(), postItEntity1.isDone());
-        PostItDto postItDto2 = PostItDto.of(postItEntity2.getPostItId(), categoryDto2, postItEntity2.getContent(), postItEntity2.getCreatedAt(), postItEntity2.isDone());
+        PostItDto postItDto1 = PostItDto.of(postItEntity1.getPostItClientId(), categoryDto1, postItEntity1.getContent(), postItEntity1.getCreatedAt(), postItEntity1.isDone());
+        PostItDto postItDto2 = PostItDto.of(postItEntity2.getPostItClientId(), categoryDto2, postItEntity2.getContent(), postItEntity2.getCreatedAt(), postItEntity2.isDone());
 
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
         given(postItCategoryRepository.findById(categoryDto1.postItCategoryId())).willReturn(Optional.of(postItCategoryEntity1));
         given(postItCategoryRepository.findById(categoryDto2.postItCategoryId())).willReturn(Optional.empty());
-        given(postItRepository.findById(postItEntity1.getPostItId())).willReturn(Optional.of(postItEntity1));
-        given(postItRepository.findById(postItEntity2.getPostItId())).willReturn(Optional.empty());
+        given(postItRepository.findById(postItEntity1.getPostItClientId())).willReturn(Optional.of(postItEntity1));
+        given(postItRepository.findById(postItEntity2.getPostItClientId())).willReturn(Optional.empty());
         given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity1.getTitle())).willReturn(Optional.of(postItCategoryEntity1));
         given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity2.getTitle())).willReturn(Optional.of(postItCategoryEntity2));
 
