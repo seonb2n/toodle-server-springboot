@@ -115,7 +115,8 @@ class PostItServiceTest {
         //given
         given(postItRepository.saveAll(any())).willReturn(List.of(postItEntity1));
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
-        given(postItCategoryRepository.findByUserAccountAndTitle(any(), any())).willReturn(Optional.of(postItCategoryEntity1));
+        given(postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(any(), any())).willReturn(Optional.of(postItCategoryEntity1));
+
         //when
         var postItList = sut.updatePostIt(List.of(), List.of(PostItDto.from(postItEntity1)), UserAccountDto.from(userAccount));
 
@@ -135,12 +136,12 @@ class PostItServiceTest {
         PostItDto postItDto2 = PostItDto.of(postItEntity2.getPostItClientId(), categoryDto2, postItEntity2.getContent(), postItEntity2.getCreatedAt(), postItEntity2.isDone());
 
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
-        given(postItCategoryRepository.findById(categoryDto1.postItCategoryClientId())).willReturn(Optional.of(postItCategoryEntity1));
-        given(postItCategoryRepository.findById(categoryDto2.postItCategoryClientId())).willReturn(Optional.empty());
-        given(postItRepository.findById(postItEntity1.getPostItClientId())).willReturn(Optional.of(postItEntity1));
-        given(postItRepository.findById(postItEntity2.getPostItClientId())).willReturn(Optional.empty());
-        given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity1.getTitle())).willReturn(Optional.of(postItCategoryEntity1));
-        given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity2.getTitle())).willReturn(Optional.of(postItCategoryEntity2));
+        given(postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, categoryDto1.postItCategoryClientId())).willReturn(Optional.of(postItCategoryEntity1));
+        given(postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, categoryDto2.postItCategoryClientId())).willReturn(Optional.empty());
+        given(postItRepository.findByUserAccountAndPostItClientId(userAccount, postItEntity1.getPostItClientId())).willReturn(Optional.of(postItEntity1));
+        given(postItRepository.findByUserAccountAndPostItClientId(userAccount, postItEntity2.getPostItClientId())).willReturn(Optional.empty());
+        given(postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, categoryDto1.postItCategoryClientId())).willReturn(Optional.of(postItCategoryEntity1));
+        given(postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, categoryDto2.postItCategoryClientId())).willReturn(Optional.of(postItCategoryEntity2));
 
         //when
         sut.updatePostIt(List.of(categoryDto1, categoryDto2), List.of(postItDto1, postItDto2), UserAccountDto.from(userAccount));
