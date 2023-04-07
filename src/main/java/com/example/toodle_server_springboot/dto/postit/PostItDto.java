@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public record PostItDto(
-        UUID postItId,
+        UUID postItClientId,
         PostItCategoryDto categoryDto,
         String content,
         String createdTime,

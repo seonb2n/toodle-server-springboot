@@ -74,17 +74,16 @@ public class PostItService {
         var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email()).orElseThrow();
         // 카테고리 생성
         var updatedCategoryList = postItCategoryDtoList.stream().map(it ->
-                postItCategoryRepository.findById(it.postItCategoryId())
-                        .orElse(PostItCategory.of(it.postItCategoryId(), it.title(), userAccount))).toList();
+                postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, it.postItCategoryClientId())
+                        .orElse(PostItCategory.of(it.postItCategoryClientId(), it.title(), userAccount))).toList();
         postItCategoryRepository.saveAll(updatedCategoryList);
 
         // 포스트잇 생성
         var updatePostItList = postItDtoLIst.stream().map(it -> {
-            var postItTitle = it.categoryDto().title();
-            //todo 새로운 카테고리를 할당할 때, title 로 검색되는 것은 안전하지 않다.
-            var category = postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItTitle).orElseThrow();
-            return postItRepository.findById(it.postItId())
-                    .orElse(PostIt.of(it.postItId(), it.content(), category, userAccount, it.isDone()));
+            var postItCategoryClientId = it.categoryDto().postItCategoryClientId();
+            var category = postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, postItCategoryClientId).orElseThrow();
+            return postItRepository.findByUserAccountAndPostItClientId(userAccount, it.postItClientId())
+                    .orElse(PostIt.of(it.postItClientId(), it.content(), category, userAccount, it.isDone()));
         }).toList();
         return postItRepository.saveAll(updatePostItList).stream().map(PostItDto::from).toList();
     }

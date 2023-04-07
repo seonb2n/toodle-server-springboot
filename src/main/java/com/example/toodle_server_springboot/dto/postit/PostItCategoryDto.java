@@ -6,7 +6,7 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import java.util.UUID;
 
 public record PostItCategoryDto(
-        UUID postItCategoryId,
+        UUID postItCategoryClientId,
         String title
 ) {
 

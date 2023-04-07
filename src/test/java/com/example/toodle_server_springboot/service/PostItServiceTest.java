@@ -135,8 +135,8 @@ class PostItServiceTest {
         PostItDto postItDto2 = PostItDto.of(postItEntity2.getPostItClientId(), categoryDto2, postItEntity2.getContent(), postItEntity2.getCreatedAt(), postItEntity2.isDone());
 
         given(userAccountRepository.findUserAccountByEmail(any())).willReturn(Optional.of(userAccount));
-        given(postItCategoryRepository.findById(categoryDto1.postItCategoryId())).willReturn(Optional.of(postItCategoryEntity1));
-        given(postItCategoryRepository.findById(categoryDto2.postItCategoryId())).willReturn(Optional.empty());
+        given(postItCategoryRepository.findById(categoryDto1.postItCategoryClientId())).willReturn(Optional.of(postItCategoryEntity1));
+        given(postItCategoryRepository.findById(categoryDto2.postItCategoryClientId())).willReturn(Optional.empty());
         given(postItRepository.findById(postItEntity1.getPostItClientId())).willReturn(Optional.of(postItEntity1));
         given(postItRepository.findById(postItEntity2.getPostItClientId())).willReturn(Optional.empty());
         given(postItCategoryRepository.findByUserAccountAndTitle(userAccount, postItCategoryEntity1.getTitle())).willReturn(Optional.of(postItCategoryEntity1));
