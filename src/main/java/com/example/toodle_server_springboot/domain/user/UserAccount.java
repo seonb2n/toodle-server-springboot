@@ -4,9 +4,11 @@ import com.example.toodle_server_springboot.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -15,9 +17,10 @@ import java.util.Objects;
 public class UserAccount extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(name = "user_id")
-    private Long userId;
+    private UUID userId;
 
     @Setter
     @Column(name = "user_email")

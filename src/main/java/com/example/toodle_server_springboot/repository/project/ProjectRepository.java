@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
-    List<Project> findAllByUserAccount_UserId(Long userId);
+    List<Project> findAllByUserAccount_UserId(UUID userId);
 
     void deleteProjectByProjectId(UUID projectId);
 
