@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("포스트잇 JPA 연결 태스트")
 @DataJpaTest
@@ -102,45 +102,40 @@ class PostItRepositoryTest {
         assertEquals(2, savedPostItList.size());
     }
 
-    //todo 포스트잇 카테고리 삭제 로직 구현 시, 테스트 케이스 추가
-//    @DisplayName("postItCategory 를 삭제하는 경우, postIt 이 고아 객체로 남는지 test")
-//    @Test
-//    @Rollback(value = false)
-//    public void givenNothing_whenDeletePostItCategory_thenReturnOrphanPostItList() throws Exception {
-//        //given
-//        PostItCategory deleteCategory = PostItCategory.of("test-postit-category2", userAccount);
-//        postItCategoryRepository.save(deleteCategory);
-//        PostIt postIt1 = PostIt.of("content", userAccount);
-//        postIt1.setPostICategory(deleteCategory);
-//        postItRepository.save(postIt1);
-//
-//        //when
-//        postItCategoryRepository.delete(deleteCategory);
-//        em.flush();
-//        em.clear();
-//        //var savedPostIt = em.find(PostIt.class, postIt1.getPostItId());
-//        var savedPostIt = postItRepository.findById(postIt1.getPostItId());
-//
-//        //then
-//        assertNotNull(savedPostIt.get().getPostICategory());
-//        assertEquals(true, savedPostIt.get().getPostICategory().isDeleted());
-//    }
-//
-//    @DisplayName("postItCategory 을 조회한다. 삭제된 포스트잇은 조회되지 않는다.")
-//    @Test
-//    public void givenUserAccount_whenFindPostItCategoryList_thenReturnExistPostItCategory() throws Exception {
-//        //given
-//        PostItCategory deleteCategory = PostItCategory.of("test-postit-category2", userAccount);
-//        postItCategoryRepository.save(deleteCategory);
-//        postItCategoryRepository.delete(deleteCategory);
-//        em.flush();
-//        em.clear();
-//
-//        //when
-//        var postItList = postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(userAccount.getEmail());
-//
-//        //then
-//        assertEquals(2, postItList.size());
-//    }
+    @DisplayName("postItCategory 를 삭제하는 경우라도, postIt 에서는 postItCategory 의 정보를 가져올 수 있다. 그러나 해당 포스트잇 카테고리의 상태는 삭제된 상태이다.")
+    @Test
+    public void givenNothing_whenDeletePostItCategory_thenReturnOrphanPostItList() throws Exception {
+        //given
+        PostIt postIt1 = PostIt.of("content", userAccount);
+        postIt1.setPostICategory(category);
+        postIt1 = postItRepository.save(postIt1);
+
+        //when
+        postItCategoryRepository.deleteByPostItCategoryClientId(category.getPostItCategoryClientId());
+        em.flush();
+        em.clear();
+        postIt1 = postItRepository.getReferenceById(postIt1.getPostItId());
+
+        //then
+        assertNotNull(postIt1.getPostICategory());
+        assertTrue(postIt1.getPostICategory().isDeleted());
+    }
+
+    @DisplayName("postItCategory 을 조회한다. 삭제된 포스트잇은 조회되지 않는다.")
+    @Test
+    public void givenUserAccount_whenFindPostItCategoryList_thenReturnExistPostItCategory() throws Exception {
+        //given
+        PostItCategory deleteCategory = PostItCategory.of("test-postit-category2", userAccount);
+        deleteCategory = postItCategoryRepository.save(deleteCategory);
+        postItCategoryRepository.deleteByPostItCategoryClientId(deleteCategory.getPostItCategoryClientId());
+        em.flush();
+        em.clear();
+
+        //when
+        var postItList = postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(userAccount.getEmail());
+
+        //then
+        assertEquals(1, postItList.size());
+    }
 
 }
