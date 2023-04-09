@@ -39,6 +39,7 @@ public class PostItCategory extends BaseEntity {
     @Column(name = "postit_category_title")
     private String title;
 
+    @Setter
     private boolean deleted = Boolean.FALSE;
 
     protected PostItCategory() {

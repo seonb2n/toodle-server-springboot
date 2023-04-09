@@ -31,9 +31,9 @@ public class PostItCategoryService {
 
     /**
      * 카테고리를 soft delete 한다.
-     * @param categoryID
+     * @param postItCategoryClientId
      */
-    void deleteCategory(UUID categoryID) {
-        postItCategoryRepository.deleteById(categoryID);
+    void deleteCategory(UUID postItCategoryClientId) {
+        postItCategoryRepository.deleteByPostItCategoryClientId(postItCategoryClientId);
     }
 }

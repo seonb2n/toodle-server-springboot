@@ -150,4 +150,5 @@ class PostItServiceTest {
         verify(postItRepository).saveAll(any());
         verify(postItCategoryRepository).saveAll(any());
     }
+
 }
