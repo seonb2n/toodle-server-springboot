@@ -44,6 +44,7 @@ public class PostItController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody PostItUpdateRequest updateRequest
             ) {
+        //todo 업데이트 요청 시에 제대로 작동되는지 테스트해야 함
         var updatedPostItDtoList = postItService.updatePostIt(
                 updateRequest.postItCategoryDtoList(),
                 updateRequest.getPostItDtoList(),
