@@ -55,4 +55,14 @@ public class UserAccountService {
     public UserAccount findUserAccount(String userEmail) {
         return userAccountRepository.findUserAccountByEmail(userEmail).orElseThrow();
     }
+
+    /**
+     * 가입된 전적이 있는 이메일인지 체크한다.
+     * @param userEmail
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public boolean checkEmail(String userEmail) {
+        return userAccountRepository.findUserAccountByEmail(userEmail).isPresent();
+    }
 }

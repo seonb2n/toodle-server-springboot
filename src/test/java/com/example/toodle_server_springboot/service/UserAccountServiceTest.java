@@ -87,4 +87,33 @@ class UserAccountServiceTest {
         //then
         assertEquals(testEmail, result.getEmail());
     }
+
+    @DisplayName("UserEmail 로 이미 존재하는 사용자인지 확인한다 - 존재")
+    @Test
+    void givenUserEmail_whenCheckUserEmail_thenReturnTrue() {
+        //given
+        String testEmail = "test-email";
+        UserAccount userAccount = UserAccount.of(testEmail, "test-name", "test-pwd");
+        given(userAccountRepository.findUserAccountByEmail(testEmail)).willReturn(Optional.of(userAccount));
+
+        //when
+        var result = sut.checkEmail(testEmail);
+
+        //then
+        assertTrue(result);
+    }
+
+    @DisplayName("userEmail 로 이미 존재하는 사용자인지 확인한다 - 존재하지 않음")
+    @Test
+    void givenUserEmail_whenCheckUserEmail_thenReturnFalse() {
+        //given
+        String testEmail = "test-email";
+        given(userAccountRepository.findUserAccountByEmail(testEmail)).willReturn(Optional.empty());
+
+        //when
+        var result = sut.checkEmail(testEmail);
+
+        //then
+        assertFalse(result);
+    }
 }

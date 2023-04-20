@@ -48,4 +48,9 @@ public class UserAccountController {
         var token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new UserAccountAuthenticateResponse(token));
     }
+
+    @GetMapping("/checkEmail")
+    public ResponseEntity<?> checkUserAccountEmail(@RequestParam String userEmail) {
+        return ResponseEntity.ok(userAccountService.checkEmail(userEmail));
+    }
 }
