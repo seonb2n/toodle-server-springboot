@@ -78,12 +78,14 @@ public class PostItService {
                         .orElse(PostItCategory.of(it.postItCategoryClientId(), it.title(), userAccount))).toList();
         postItCategoryRepository.saveAll(updatedCategoryList);
 
-        // 포스트잇 생성
+        // 포스트잇이 생성되는 경우에는 생성, 업데이트인 경우에는 업데이트
         var updatePostItList = postItDtoLIst.stream().map(it -> {
             var postItCategoryClientId = it.categoryDto().postItCategoryClientId();
             var category = postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, postItCategoryClientId).orElseThrow();
-            return postItRepository.findByUserAccountAndPostItClientId(userAccount, it.postItClientId())
+            var foundPostIt = postItRepository.findByUserAccountAndPostItClientId(userAccount, it.postItClientId())
                     .orElse(PostIt.of(it.postItClientId(), it.content(), category, userAccount, it.isDone()));
+            foundPostIt.update(it);
+            return foundPostIt;
         }).toList();
         return postItRepository.saveAll(updatePostItList).stream().map(PostItDto::from).toList();
     }

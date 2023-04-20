@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.domain.postIt;
 
 import com.example.toodle_server_springboot.domain.BaseEntity;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
+import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -77,6 +78,16 @@ public class PostIt extends BaseEntity {
         postIt.setPostICategory(postItCategory);
         postIt.setPostItClientId(postItClientId);
         return postIt;
+    }
+
+    /**
+     * PostItDto 와 비교해서 내용을 업데이트한다.
+     * @param postItDto
+     */
+    public void update(PostItDto postItDto) {
+        if (this.postItClientId.equals(postItDto.postItClientId())) {
+            this.isDone = postItDto.isDone();
+        }
     }
 
     @Override
