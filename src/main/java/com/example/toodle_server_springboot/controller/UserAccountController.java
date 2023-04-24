@@ -25,13 +25,15 @@ public class UserAccountController {
 
     /**
      * 사용자 회원 가입 호출 컨트롤러
-     * @param request
+     * @param userAccountRegisterRequest
      * @return
      */
     @PostMapping("/register")
-    public UserAccountResponse registerUser(@RequestBody UserAccountRegisterRequest request) {
-        var registerDto = userAccountService.registerUser(request.userEmail(), request.userPassword(), request.userNickName());
-        return UserAccountResponse.from(registerDto);
+    public UserAccountResponse registerUser(@RequestBody UserAccountRegisterRequest userAccountRegisterRequest) {
+        var registerDto = userAccountService.registerUser(userAccountRegisterRequest.userEmail(), userAccountRegisterRequest.userPassword(), userAccountRegisterRequest.userNickName());
+        var userDetails = jwtUserDetailsService.loadUserByUsername(registerDto.email());
+        var token = jwtTokenUtil.generateToken(userDetails);
+        return UserAccountResponse.from(registerDto, token);
     }
 
     /**
