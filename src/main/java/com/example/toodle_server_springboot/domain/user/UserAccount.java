@@ -1,6 +1,5 @@
 package com.example.toodle_server_springboot.domain.user;
 
-import com.example.toodle_server_springboot.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "user_account")
-public class UserAccount extends BaseEntity {
+public class UserAccount {
 
     @Id
     @GeneratedValue(generator = "uuid2")

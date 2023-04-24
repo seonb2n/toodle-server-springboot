@@ -1,6 +1,6 @@
 -- 테스트 계정
-insert into user_account (user_id, user_email, user_nickname, user_password,  created_at, created_by, modified_at, modified_by) values
-('2e7bafdc-18b7-423a-9a04-1edbce00c560', 'sbkim@naver.com', 'sbKim', '{noop}1q2w3e4r!',  now(), 'TEST', now(), 'TEST');
+insert into user_account (user_id, user_email, user_nickname, user_password) values
+('2e7bafdc-18b7-423a-9a04-1edbce00c560', 'sbkim@naver.com', 'sbKim', '{noop}1q2w3e4r!');
 
 -- sbkim이 가진 포스트잇 카테고리
 insert into tb_postit_category (postit_category_id, postit_category_client_id, created_at, created_by, modified_at, modified_by, postit_category_title, deleted, user_id)
