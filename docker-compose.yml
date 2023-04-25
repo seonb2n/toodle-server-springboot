@@ -31,6 +31,12 @@ services:
       - postgresql
     networks:
       - test_env
+  frontend:
+    image: 626ksb/toodle_frontend
+    restart: always
+    container_name: frontend
+    ports:
+      - "8300:80"
 
 networks:
   test_env:
