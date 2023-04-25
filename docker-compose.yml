@@ -37,6 +37,10 @@ services:
     container_name: frontend
     ports:
       - "8300:80"
+  registry-login:
+    image: docker:stable
+    entrypoint: "/bin/sh"
+    command: "-c 'docker login -u {DOCKER_USERNAME} -p my-password {DOCKER_PASSWORD}'"
 
 networks:
   test_env:
