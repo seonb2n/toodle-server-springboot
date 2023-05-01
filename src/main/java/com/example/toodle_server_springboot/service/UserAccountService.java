@@ -7,7 +7,6 @@ import com.example.toodle_server_springboot.exception.ErrorCode;
 import com.example.toodle_server_springboot.exception.UserEmailNotFoundException;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
-    private final JavaMailSender javaMailSender;
 
     /**
      * 사용자 회원 가입에 사용하는 메서드
