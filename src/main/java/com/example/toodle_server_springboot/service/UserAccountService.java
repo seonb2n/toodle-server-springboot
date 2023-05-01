@@ -32,7 +32,7 @@ public class UserAccountService {
             throw new CustomException(ErrorCode.INVALID_EMAIL_EXCEPTION);
         }
         //todo 사용자 닉네임이 비어있으면 임의의 닉네임 부여하는 로직 추가!
-        UserAccount userAccount = UserAccount.of(userEmail, userNickname, userPassword);
+        UserAccount userAccount = UserAccount.of(userEmail, userNickname, "{noop}" + userPassword);
         var savedUserAccount = userAccountRepository.save(userAccount);
         return UserAccountDto.from(userAccountRepository.save(savedUserAccount));
     }
