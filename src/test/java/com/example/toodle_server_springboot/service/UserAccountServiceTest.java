@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.exception.CustomException;
+import com.example.toodle_server_springboot.exception.UserEmailNotFoundException;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @DisplayName("비즈니스 로직 - 사용자")
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +27,7 @@ class UserAccountServiceTest {
     @InjectMocks private UserAccountService sut;
 
     @Mock private UserAccountRepository userAccountRepository;
+    @Mock private JavaMailSender javaMailSender;
 
     @DisplayName("회원 가입을 요청하면, 다른 Email 일 경우 허용한다.")
     @Test
@@ -115,5 +119,36 @@ class UserAccountServiceTest {
 
         //then
         assertFalse(result);
+    }
+    
+    @DisplayName("userEmail 로 가입된 회원이 존재하는 경우, 비밀번호 변경 이메일을 전송한다")
+    @Test
+    public void givenUserEmail_whenUserAccountWithEmailExist_thenSendEmail() throws Exception {
+        //given
+        String email = "test@example.com";
+        String password = "test123456";
+        String nickname = "test-user";
+        given(userAccountRepository.findUserAccountByEmail(email))
+                .willReturn(Optional.of(UserAccount.of(email, password, nickname)));
+        
+        //when
+        sut.sendEmailToUser(email);
+
+        //then
+        verify(userAccountRepository).findUserAccountByEmail(email);
+    }
+
+    @DisplayName("userEmail 로 가입된 회원이 존재하지 않는 경우, Error를 발생시킨다.")
+    @Test
+    public void givenUserEmail_whenUserAccountWithEmailNotExist_thenThrowError() throws Exception {
+        //given
+        String email = "test@example.com";
+        given(userAccountRepository.findUserAccountByEmail(email))
+                .willReturn(Optional.empty());
+
+        //when & then
+        assertThrows(UserEmailNotFoundException.class, () -> sut.sendEmailToUser(email));
+        verify(userAccountRepository).findUserAccountByEmail(email);
+
     }
 }

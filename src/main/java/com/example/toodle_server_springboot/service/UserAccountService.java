@@ -4,8 +4,10 @@ import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.exception.CustomException;
 import com.example.toodle_server_springboot.exception.ErrorCode;
+import com.example.toodle_server_springboot.exception.UserEmailNotFoundException;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
+    private final JavaMailSender javaMailSender;
 
     /**
      * 사용자 회원 가입에 사용하는 메서드
+     *
      * @param userEmail
      * @param userNickname
      * @param userPassword
@@ -39,6 +43,7 @@ public class UserAccountService {
 
     /**
      * UserEmail 을 사용해서 UserAccountDto 를 가져오는 메서드
+     *
      * @param userEmail
      * @return
      */
@@ -49,6 +54,7 @@ public class UserAccountService {
 
     /**
      * UserEmail 을 사용해서 Entity 를 가져오는 메서드
+     *
      * @param userEmail
      * @return
      */
@@ -59,11 +65,23 @@ public class UserAccountService {
 
     /**
      * 가입된 전적이 있는 이메일인지 체크한다.
+     *
      * @param userEmail
      * @return
      */
     @Transactional(readOnly = true)
     public boolean checkEmail(String userEmail) {
         return userAccountRepository.findUserAccountByEmail(userEmail).isPresent();
+    }
+
+    /**
+     * 가입된 전적이 있는 회원의 경우, 비밀번호 변경 이메일을 보낸다.
+     * @param userEmail
+     */
+    public void sendEmailToUser(String userEmail) {
+        UserAccount userAccount = userAccountRepository.findUserAccountByEmail(userEmail)
+                .orElseThrow(UserEmailNotFoundException::new);
+
+        //todo userEmail 로 비밀번호 변경 후에, Email 전송해줘야 함
     }
 }
