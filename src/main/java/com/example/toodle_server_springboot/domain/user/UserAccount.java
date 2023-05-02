@@ -33,12 +33,17 @@ public class UserAccount {
     @Column(name = "user_password")
     private String password;
 
+    @Setter
+    @Column(name = "user_is_tmp_pwd")
+    private boolean isTmpPassword;
+
     protected UserAccount() {}
 
     private UserAccount(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.isTmpPassword = false;
     }
 
     public static UserAccount of(String email, String nickname, String password) {

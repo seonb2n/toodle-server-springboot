@@ -5,11 +5,18 @@ import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.exception.CustomException;
 import com.example.toodle_server_springboot.exception.ErrorCode;
 import com.example.toodle_server_springboot.exception.UserEmailNotFoundException;
+import com.example.toodle_server_springboot.exception.UserEmailSendFailException;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
+import com.example.toodle_server_springboot.util.MailBodyForm;
+import com.example.toodle_server_springboot.util.TmpPasswordGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.internet.MimeMessage;
 import java.util.Optional;
 
 @Service
@@ -17,6 +24,11 @@ import java.util.Optional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
+    private final JavaMailSender javaMailSender;
+    private final TmpPasswordGenerator tmpPasswordGenerator;
+
+    @Value("${spring.mail.username}")
+    private String from;
 
     /**
      * 사용자 회원 가입에 사용하는 메서드
@@ -76,10 +88,30 @@ public class UserAccountService {
      * 가입된 전적이 있는 회원의 경우, 비밀번호 변경 이메일을 보낸다.
      * @param userEmail
      */
+    @Transactional
     public void sendEmailToUser(String userEmail) {
         UserAccount userAccount = userAccountRepository.findUserAccountByEmail(userEmail)
                 .orElseThrow(UserEmailNotFoundException::new);
 
-        //todo userEmail 로 비밀번호 변경 후에, Email 전송해줘야 함
+        // 1. 사용자 계정을 임시 비밀번호로 바꾼 뒤, 해당 계정의 상태를 임시 비번 상태로 바꾼다.
+        String tmpPassword = tmpPasswordGenerator.generatePassword(10);
+        userAccount.setPassword("{noop}" + tmpPassword);
+        userAccount.setTmpPassword(true);
+        userAccountRepository.save(userAccount);
+
+        try {
+            // 2. 해당 비밀번호를 안내하는 메일을 보낸다.
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper.setFrom(from);
+            mimeMessageHelper.setTo(userEmail);
+            mimeMessageHelper.setSubject("[TOODLE] 임시 비밀번호 안내");
+            StringBuilder body = new StringBuilder();
+            body.append(new MailBodyForm(userAccount.getNickname(), "비밀번호가 변경됐습니다. [" + userAccount.getPassword() + "] \n 재로그인 부탁드립니다."));
+            mimeMessageHelper.setText(body.toString(), true);
+            javaMailSender.send(mimeMessage);
+        } catch (Exception e) {
+            throw new UserEmailSendFailException();
+        }
     }
 }

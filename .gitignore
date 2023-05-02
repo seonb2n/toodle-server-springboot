@@ -36,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 application-local-email.properties
+/src/main/resources/application-email.properties

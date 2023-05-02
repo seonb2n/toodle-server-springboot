@@ -3,6 +3,7 @@ package com.example.toodle_server_springboot.controller;
 import com.example.toodle_server_springboot.config.security.JwtTokenUtil;
 import com.example.toodle_server_springboot.config.security.JwtUserDetailsService;
 import com.example.toodle_server_springboot.dto.request.UserAccountAuthenticateRequest;
+import com.example.toodle_server_springboot.dto.request.UserAccountChangePasswordRequest;
 import com.example.toodle_server_springboot.dto.request.UserAccountRegisterRequest;
 import com.example.toodle_server_springboot.dto.response.UserAccountAuthenticateResponse;
 import com.example.toodle_server_springboot.dto.response.UserAccountResponse;
@@ -54,5 +55,11 @@ public class UserAccountController {
     @GetMapping("/checkEmail")
     public ResponseEntity<?> checkUserAccountEmail(@RequestParam String userEmail) {
         return ResponseEntity.ok(userAccountService.checkEmail(userEmail));
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<Void> changePassword(@RequestBody UserAccountChangePasswordRequest request) {
+        userAccountService.sendEmailToUser(request.userEmail());
+        return ResponseEntity.ok().build();
     }
 }
