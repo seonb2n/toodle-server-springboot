@@ -107,7 +107,7 @@ public class UserAccountService {
             mimeMessageHelper.setTo(userEmail);
             mimeMessageHelper.setSubject("[TOODLE] 임시 비밀번호 안내");
             StringBuilder body = new StringBuilder();
-            body.append(new MailBodyForm(userAccount.getNickname(), "비밀번호가 변경됐습니다. [" + userAccount.getPassword() + "] \n 재로그인 부탁드립니다."));
+            body.append(new MailBodyForm(userAccount.getNickname(), "비밀번호가 변경됐습니다. [" + userAccount.getPassword().substring(6) + "] \n 재로그인 부탁드립니다."));
             mimeMessageHelper.setText(body.toString(), true);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
