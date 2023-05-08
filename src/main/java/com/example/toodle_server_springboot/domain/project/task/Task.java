@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -47,6 +48,12 @@ public class Task extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private IMPORTNACE importnace;
 
+    @Column(name = "task_start_at")
+    private LocalDateTime startAt;
+
+    @Column(name = "task_end_at")
+    private LocalDateTime endAt;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Action> actionSet = new LinkedHashSet<>();
@@ -57,17 +64,22 @@ public class Task extends BaseEntity {
 
     protected Task() {}
 
-    private Task(UserAccount userAccount, Project project, String content, IMPORTNACE importnace) {
+    private Task(UserAccount userAccount, Project project, String content, IMPORTNACE importnace, LocalDateTime startAt, LocalDateTime endAt) {
         this.userAccount = userAccount;
         this.project =  project;
         this.content = content;
         this.importnace = importnace;
+        this.startAt = startAt;
+        this.endAt = endAt;
     }
 
     public static Task of (UserAccount userAccount, Project project, String content, IMPORTNACE importnace) {
-        return new Task(userAccount, project, content, importnace);
+        return new Task(userAccount, project, content, importnace, null, null);
     }
 
+    public static Task of (UserAccount userAccount, Project project, String content, IMPORTNACE importnace, LocalDateTime startAt, LocalDateTime endAt) {
+        return new Task(userAccount, project, content, importnace, startAt, endAt);
+    }
     public void update(String content) {
         this.content = content;
     }
@@ -85,7 +97,7 @@ public class Task extends BaseEntity {
         return Objects.hash(userAccount, project, content, actionSet);
     }
 
-    public static enum IMPORTNACE {
+    public enum IMPORTNACE {
         HIGH,
         MIDDLE,
         LOW

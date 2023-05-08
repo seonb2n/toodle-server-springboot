@@ -36,4 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 application-local-email.properties
+
+### 이메일 전송 개발을 위한 local ###
 /src/main/resources/application-email.properties
+

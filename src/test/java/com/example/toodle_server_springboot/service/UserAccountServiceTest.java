@@ -1,15 +1,19 @@
 package com.example.toodle_server_springboot.service;
 
+import com.example.toodle_server_springboot.config.TestSecurityConfig;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.exception.CustomException;
 import com.example.toodle_server_springboot.exception.UserEmailNotFoundException;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
+import com.example.toodle_server_springboot.util.TmpPasswordGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Optional;
@@ -22,12 +26,14 @@ import static org.mockito.Mockito.verify;
 
 @DisplayName("비즈니스 로직 - 사용자")
 @ExtendWith(MockitoExtension.class)
+@Import({TestSecurityConfig.class})
 class UserAccountServiceTest {
 
     @InjectMocks private UserAccountService sut;
 
     @Mock private UserAccountRepository userAccountRepository;
     @Mock private JavaMailSender javaMailSender;
+    @Autowired private TmpPasswordGenerator tmpPasswordGenerator;
 
     @DisplayName("회원 가입을 요청하면, 다른 Email 일 경우 허용한다.")
     @Test
