@@ -45,7 +45,7 @@ class UserAccountRepositoryTest {
     @Test
     public void givenUserEmail_whenSearch_thenReturnUser() throws Exception {
         //given
-        String userEmail = "sbkim@naver.com";
+        String userEmail = "626ksb@naver.com";
 
         //when
         var userEntity = userAccountRepository.findUserAccountByEmail(userEmail);

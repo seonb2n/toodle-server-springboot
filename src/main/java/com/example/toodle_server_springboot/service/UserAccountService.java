@@ -10,6 +10,7 @@ import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import com.example.toodle_server_springboot.util.MailBodyForm;
 import com.example.toodle_server_springboot.util.TmpPasswordGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,6 +29,7 @@ public class UserAccountService {
     private final TmpPasswordGenerator tmpPasswordGenerator;
 
     @Value("${spring.mail.username}")
+    @Setter
     private String from;
 
     /**

@@ -12,10 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.TestPropertySource;
 
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,13 +29,15 @@ import static org.mockito.Mockito.verify;
 @DisplayName("비즈니스 로직 - 사용자")
 @ExtendWith(MockitoExtension.class)
 @Import({TestSecurityConfig.class})
+@TestPropertySource(properties = { "spring.mail.username=sbkim@naver.com" })
 class UserAccountServiceTest {
-
-    @InjectMocks private UserAccountService sut;
 
     @Mock private UserAccountRepository userAccountRepository;
     @Mock private JavaMailSender javaMailSender;
-    @Autowired private TmpPasswordGenerator tmpPasswordGenerator;
+    @Mock private TmpPasswordGenerator tmpPasswordGenerator;
+
+    @InjectMocks private UserAccountService sut;
+
 
     @DisplayName("회원 가입을 요청하면, 다른 Email 일 경우 허용한다.")
     @Test
@@ -134,9 +138,12 @@ class UserAccountServiceTest {
         String email = "test@example.com";
         String password = "test123456";
         String nickname = "test-user";
+        sut.setFrom("TEST_FROM@NAVER.COM");
         given(userAccountRepository.findUserAccountByEmail(email))
                 .willReturn(Optional.of(UserAccount.of(email, password, nickname)));
-        
+        given(javaMailSender.createMimeMessage()).willReturn(new MimeMessage((Session) null));
+
+
         //when
         sut.sendEmailToUser(email);
 
