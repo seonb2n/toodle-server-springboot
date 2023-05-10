@@ -61,7 +61,6 @@ public class UserAccountController {
         authenticationManager.authenticate(authenticationToken);
         var userDetails = jwtUserDetailsService.loadUserByUsername(request.email());
         session.setAttribute(redisSessionNamespace, request.email());
-        String value = (String) session.getAttribute(redisSessionNamespace);
         var token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new UserAccountAuthenticateResponse(token));
     }
