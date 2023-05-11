@@ -29,5 +29,4 @@ public class TestRedisConfig {
         redisTemplate.setConnectionFactory(testRedisConnectionFactory());
         return redisTemplate;
     }
-
 }

@@ -5,6 +5,7 @@ import com.example.toodle_server_springboot.config.security.JwtTokenUtil;
 import com.example.toodle_server_springboot.config.security.JwtUserDetailsService;
 import com.example.toodle_server_springboot.dto.request.UserAccountAuthenticateRequest;
 import com.example.toodle_server_springboot.dto.request.UserAccountChangePasswordRequest;
+import com.example.toodle_server_springboot.repository.SessionRepository;
 import com.example.toodle_server_springboot.service.UserAccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +42,9 @@ public class UserAccountControllerTest {
     private JwtTokenUtil jwtTokenUtil;
     @MockBean
     private AuthenticationManager authenticationManager;
+    @MockBean
+    private SessionRepository sessionRepository;
+
     private UserAccountService userAccountService;
 
     UserAccountControllerTest(@Autowired MockMvc mvc, @Autowired UserAccountService userAccountService) {
@@ -74,6 +78,7 @@ public class UserAccountControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("jwtToken").isNotEmpty());
         then(jwtUserDetailsService).should().loadUserByUsername(anyString());
+        then(sessionRepository).should().saveSession(any(), anyString());
         then(jwtTokenUtil).should().generateToken(any());
     }
 

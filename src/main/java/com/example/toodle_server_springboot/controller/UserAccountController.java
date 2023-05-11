@@ -7,10 +7,10 @@ import com.example.toodle_server_springboot.dto.request.UserAccountChangePasswor
 import com.example.toodle_server_springboot.dto.request.UserAccountRegisterRequest;
 import com.example.toodle_server_springboot.dto.response.UserAccountAuthenticateResponse;
 import com.example.toodle_server_springboot.dto.response.UserAccountResponse;
+import com.example.toodle_server_springboot.repository.SessionRepository;
 import com.example.toodle_server_springboot.service.UserAccountService;
 import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,9 +27,8 @@ public class UserAccountController {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsService jwtUserDetailsService;
     private final AuthenticationManager authenticationManager;
+    private final SessionRepository sessionRepository;
 
-    @Value("${spring.session.redis.namespace}")
-    private String redisSessionNamespace;
 
     /**
      * 사용자 회원 가입 호출 컨트롤러
@@ -60,7 +59,7 @@ public class UserAccountController {
         var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
         authenticationManager.authenticate(authenticationToken);
         var userDetails = jwtUserDetailsService.loadUserByUsername(request.email());
-        session.setAttribute(redisSessionNamespace, request.email());
+        sessionRepository.saveSession(session, request.email());
         var token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new UserAccountAuthenticateResponse(token));
     }
