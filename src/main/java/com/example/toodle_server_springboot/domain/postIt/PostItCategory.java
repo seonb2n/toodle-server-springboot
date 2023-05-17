@@ -9,7 +9,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -39,6 +41,9 @@ public class PostItCategory extends BaseEntity {
     @Column(name = "postit_category_title")
     private String title;
 
+    @OneToMany
+    private Set<PostIt> postItSet;
+
     @Setter
     private boolean deleted = Boolean.FALSE;
 
@@ -49,6 +54,7 @@ public class PostItCategory extends BaseEntity {
         this.title = title;
         this.userAccount = userAccount;
         this.postItCategoryClientId = UUID.randomUUID();
+        this.postItSet = new HashSet<>();
     }
 
     public static PostItCategory of(String title, UserAccount userAccount) {
@@ -59,6 +65,11 @@ public class PostItCategory extends BaseEntity {
         PostItCategory postItCategory = new PostItCategory(title, userAccount);
         postItCategory.setPostItCategoryClientId(postITCategoryClientId);
         return postItCategory;
+    }
+
+    public void addPostIt(PostIt postIt) {
+        this.postItSet.add(postIt);
+        postIt.setPostICategory(this);
     }
 
     @Override

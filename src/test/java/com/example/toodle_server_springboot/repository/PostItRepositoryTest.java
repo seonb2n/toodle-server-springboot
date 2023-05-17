@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -27,30 +26,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PostItRepositoryTest {
 
     private final PostItRepository postItRepository;
-    private final PostItCategoryRepository postItCategoryRepository;
     private final UserAccountRepository userAccountRepository;
-    private final TestEntityManager em;
     private static UserAccount userAccount;
     private static PostItCategory category;
-    private static String userEmail;
 
     PostItRepositoryTest(
             @Autowired PostItRepository postItRepository,
-            @Autowired PostItCategoryRepository postItCategoryRepository,
-            @Autowired UserAccountRepository userAccountRepository,
-            @Autowired TestEntityManager em
+            @Autowired UserAccountRepository userAccountRepository
     ) {
         this.postItRepository = postItRepository;
-        this.postItCategoryRepository = postItCategoryRepository;
         this.userAccountRepository = userAccountRepository;
-        this.em = em;
     }
 
     @BeforeEach
     void setUp() {
-        userEmail = "testEmail";
+        String userEmail = "testEmail";
         userAccount = userAccountRepository.save(UserAccount.of(userEmail, "testName", "testPw"));
-        category = postItCategoryRepository.save(PostItCategory.of("test-postit-category", userAccount));
+        category =PostItCategory.of("test-postit-category", userAccount);
 //        em.flush();
     }
 
@@ -58,8 +50,8 @@ class PostItRepositoryTest {
     @Test
     void givenPostIt_whenInserting_thenReturnPostIt() {
         //given
-        PostIt postIt = PostIt.of("content", userAccount);
-        postIt.setPostICategory(category);
+        PostIt postIt = PostIt.of("content", category, userAccount);
+        category.addPostIt(postIt);
 
         //when
         var savedPostIt = postItRepository.save(postIt);
