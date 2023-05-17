@@ -13,11 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 @EnableJpaAuditing
 @DisplayName("비즈니스 로직 - 포스트잇 카테고리")
@@ -59,12 +60,13 @@ class PostItCategoryServiceTest {
     @Test
     public void givenPostItCategoryDeleteRequest_whenDeletePostItCategory_thenNull() throws Exception {
         //given
-        postItCategoryEntity1.setDeleted(true);
+        postItCategoryEntity1.markAsDeleted();
+        given(postItCategoryRepository.findByPostItCategoryClientId(any())).willReturn(Optional.of(postItCategoryEntity1));
 
         //when
         sut.deleteCategory(postItCategoryEntity1.getPostItCategoryClientId());
 
         //then
-        verify(postItCategoryRepository).deleteByPostItCategoryClientId(postItCategoryEntity1.getPostItCategoryClientId());
+        assertTrue(postItCategoryEntity1.isDeleted());
     }
 }

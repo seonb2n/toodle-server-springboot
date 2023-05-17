@@ -16,5 +16,5 @@ public interface PostItCategoryRepository extends JpaRepository<PostItCategory, 
 
     Optional<PostItCategory> findByUserAccountAndPostItCategoryClientId(UserAccount userAccount, UUID uuid);
 
-    void deleteByPostItCategoryClientId(UUID clientID);
+    Optional<PostItCategory> findByPostItCategoryClientId(UUID postItCategoryClientId);
 }

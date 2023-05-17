@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,7 +17,6 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "tb_postit_category")
-@SQLDelete(sql = "UPDATE tb_postit_category SET deleted = true where postit_category_id = ?")
 public class PostItCategory extends BaseEntity {
 
     @Id
@@ -45,11 +43,14 @@ public class PostItCategory extends BaseEntity {
     @ToString.Exclude
     private Set<PostIt> postItSet;
 
-    @Setter
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted;
 
     public void setPostItSet(Set<PostIt> postItSet) {
         this.postItSet = postItSet;
+    }
+
+    public void markAsDeleted() {
+        this.deleted = true;
     }
 
     protected PostItCategory() {
@@ -60,6 +61,7 @@ public class PostItCategory extends BaseEntity {
         this.userAccount = userAccount;
         this.postItCategoryClientId = UUID.randomUUID();
         this.postItSet = new HashSet<>();
+        this.deleted = false;
     }
 
     public static PostItCategory of(String title, UserAccount userAccount) {

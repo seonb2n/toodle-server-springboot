@@ -34,6 +34,7 @@ public class PostItCategoryService {
      * @param postItCategoryClientId
      */
     void deleteCategory(UUID postItCategoryClientId) {
-        postItCategoryRepository.deleteByPostItCategoryClientId(postItCategoryClientId);
+        var postItCategory = postItCategoryRepository.findByPostItCategoryClientId(postItCategoryClientId).orElseThrow();
+        postItCategory.markAsDeleted();
     }
 }
