@@ -42,10 +42,15 @@ public class PostItCategory extends BaseEntity {
     private String title;
 
     @OneToMany
+    @ToString.Exclude
     private Set<PostIt> postItSet;
 
     @Setter
     private boolean deleted = Boolean.FALSE;
+
+    public void setPostItSet(Set<PostIt> postItSet) {
+        this.postItSet = postItSet;
+    }
 
     protected PostItCategory() {
     }

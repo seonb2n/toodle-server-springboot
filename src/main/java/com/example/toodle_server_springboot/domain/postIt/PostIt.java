@@ -38,6 +38,7 @@ public class PostIt extends BaseEntity {
     @Setter
     @JoinColumn(name = "postit_category_id")
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private PostItCategory postICategory;
 
     @Setter
