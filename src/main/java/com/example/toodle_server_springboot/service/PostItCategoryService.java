@@ -3,7 +3,6 @@ package com.example.toodle_server_springboot.service;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.postit.PostItCategoryDto;
 import com.example.toodle_server_springboot.repository.PostItCategoryRepository;
-import com.example.toodle_server_springboot.repository.PostItRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class PostItCategoryService {
 
     private final PostItCategoryRepository postItCategoryRepository;
-    private final PostItRepository postItRepository;
 
     /**
      * 사용자가 보유한 모든 유효한 카테고리를 가져온다.

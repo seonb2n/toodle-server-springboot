@@ -69,4 +69,5 @@ class PostItCategoryServiceTest {
         //then
         assertTrue(postItCategoryEntity1.isDeleted());
     }
+
 }

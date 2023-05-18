@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -64,6 +65,8 @@ class PostItServiceTest {
         postItEntity2.setPostICategory(category);
         postItCategoryEntity1 = PostItCategory.of("test-category1", userAccount);
         postItCategoryEntity2 = PostItCategory.of("test-category2", userAccount);
+        postItCategoryEntity1.addPostIt(postItEntity1);
+        postItCategoryEntity2.addPostIt(postItEntity2);
     }
 
     @DisplayName("포스트잇 등록 테스트 - 성공")
@@ -149,6 +152,22 @@ class PostItServiceTest {
         //then
         verify(postItRepository).saveAll(any());
         verify(postItCategoryRepository).saveAll(any());
+    }
+
+
+    @DisplayName("포스트잇 카테고리를 삭제해도 포스트잇은 남아있다.")
+    @Test
+    public void givenDeletePostItCategory_whenDeletePostItCategory_thenRemainPostIt() throws Exception {
+        //given
+        postItCategoryEntity1.markAsDeleted();
+        given(postItRepository.findAllByUserAccount_Email(userAccount.getEmail())).willReturn(List.of(postItEntity1, postItEntity2));
+
+        //when
+        var postItList = sut.getAllPostIt(UserAccountDto.from(userAccount));
+
+        //then
+        assertEquals(2, postItList.size());
+        assertNotNull(postItList.get(0).categoryDto());
     }
 
 }
