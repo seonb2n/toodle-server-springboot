@@ -3,7 +3,6 @@ package com.example.toodle_server_springboot.config.security;
 import com.example.toodle_server_springboot.dto.security.NaverOauth2Response;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.UserAccountService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@Slf4j
 public class SecurityConfig {
 
     @Value("${react.ip}")
@@ -37,16 +35,20 @@ public class SecurityConfig {
             HttpSecurity http,
             JwtRequestFilter jwtRequestFilter,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService
+            OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService,
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler
             ) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .antMatchers("/api/v1/users/**").permitAll()
+                        .antMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
                 // 간편 로그인 기능 사용을 위한 설정
                 .oauth2Login(oAuth -> oAuth
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                        .defaultSuccessUrl("/{login-success-url}")
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
                 )
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
@@ -99,7 +101,6 @@ public class SecurityConfig {
             NaverOauth2Response naverOauth2Response = NaverOauth2Response.from(oAuth2User.getAttributes());
             String userEmail = "NAVER_" + naverOauth2Response.email();
             String dummyPassword = passwordEncoder.encode("{bcrypt}dummy");
-            log.info(userEmail);
             return userAccountService.findUserAccountDto(userEmail)
                     .map(UserPrincipal::from)
                     .orElseGet(() ->
