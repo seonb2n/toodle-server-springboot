@@ -5,8 +5,10 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,10 +16,15 @@ public record UserPrincipal(
         String email,
         String password,
         String nickname,
-        Collection<? extends GrantedAuthority> authorities
-) implements UserDetails {
+        Collection<? extends GrantedAuthority> authorities,
+        Map<String, Object> oAuth2Attributes
+) implements UserDetails, OAuth2User {
 
     public static UserPrincipal of(String userEmail, String userPassword, String userNickname) {
+        return of(userEmail, userPassword, userNickname, Map.of());
+    }
+
+    public static UserPrincipal of(String userEmail, String userPassword, String userNickname, Map<String, Object> oAuth2Attributes) {
         Set<RoleType> roleTypes = Set.of(RoleType.USER);
 
         return new UserPrincipal(
@@ -27,7 +34,8 @@ public record UserPrincipal(
                 roleTypes.stream()
                         .map(RoleType::getName)
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toUnmodifiableSet())
+                        .collect(Collectors.toUnmodifiableSet()),
+                oAuth2Attributes
         );
     }
 
@@ -91,5 +99,17 @@ public record UserPrincipal(
         RoleType(String name) {
             this.name = name;
         }
+    }
+
+    //OAuth2User 구현에 필요한 메서드
+    @Override
+    public Map<String, Object> getAttributes() {
+        return oAuth2Attributes;
+    }
+
+    //OAuth2User 구현에 필요한 메서드
+    @Override
+    public String getName() {
+        return email;
     }
 }
