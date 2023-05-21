@@ -3,6 +3,7 @@ package com.example.toodle_server_springboot.config.security;
 import com.example.toodle_server_springboot.dto.security.NaverOauth2Response;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.UserAccountService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
 
     @Value("${react.ip}")
@@ -42,7 +42,6 @@ public class SecurityConfig {
         return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .antMatchers("/api/v1/users/**").permitAll()
-                        .antMatchers("/cors/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // 간편 로그인 기능 사용을 위한 설정
@@ -83,20 +82,6 @@ public class SecurityConfig {
     }
 
     /**
-     * 인증 정보를 가져오는 userDetailsService 를 생성
-     *
-     * @return
-     */
-    @Bean
-    public UserDetailsService userDetailsService(UserAccountService userAccountService) {
-        return username -> userAccountService
-                .findUserAccountDto(username)
-                .map(UserPrincipal::from)
-                //해당되는 사용자가 없는 경우 Exception 처리
-                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. - username: " + username));
-    }
-
-    /**
      * OAuth2 에서 사용될 userService
      * OAuth2 로부터 가져온 정보를 바탕으로 우리 db 에 사용자 등록을 한다.
      * @param userAccountService
@@ -114,7 +99,7 @@ public class SecurityConfig {
             NaverOauth2Response naverOauth2Response = NaverOauth2Response.from(oAuth2User.getAttributes());
             String userEmail = "NAVER_" + naverOauth2Response.email();
             String dummyPassword = passwordEncoder.encode("{bcrypt}dummy");
-
+            log.info(userEmail);
             return userAccountService.findUserAccountDto(userEmail)
                     .map(UserPrincipal::from)
                     .orElseGet(() ->

@@ -64,6 +64,16 @@ public class UserAccountController {
         return ResponseEntity.ok(new UserAccountAuthenticateResponse(token));
     }
 
+    /**
+     * 네이버 아이디로 회원가입 및 로그인을 진행한 사용자의 경우에 적절한 토큰을 발급한다.
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/login/naver", method = RequestMethod.GET)
+    public ResponseEntity<?> redirectUserLoginWithNaver(@RequestParam String code) {
+        return ResponseEntity.ok(code);
+    }
+
     @GetMapping("/checkEmail")
     public ResponseEntity<?> checkUserAccountEmail(@RequestParam String userEmail) {
         return ResponseEntity.ok(userAccountService.checkEmail(userEmail));
