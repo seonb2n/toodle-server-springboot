@@ -39,4 +39,5 @@ application-local-email.properties
 
 ### 이메일 전송 개발을 위한 local ###
 /src/main/resources/application-email.properties
-
+### 운영 서버용 prop
+/src/main/resources/application-real.properties
