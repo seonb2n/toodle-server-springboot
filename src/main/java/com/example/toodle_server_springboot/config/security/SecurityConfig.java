@@ -27,6 +27,9 @@ public class SecurityConfig {
                         .antMatchers("/api/v1/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                // 간편 로그인 기능 사용을 위한 설정
+//                .oauth2Login()
+//                .and()
                 .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                 .and()
                 .exceptionHandling()
