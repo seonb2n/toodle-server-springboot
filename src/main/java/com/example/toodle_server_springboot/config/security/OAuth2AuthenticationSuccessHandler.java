@@ -34,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private String makeRedirectUrl(String token) {
-        return UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/naver/redirect?token="+token)
+        return UriComponentsBuilder.fromUriString(FRONTEND_URL + "/oauth2/naver/redirect?token="+token)
                 .build().toUriString();
     }
 }

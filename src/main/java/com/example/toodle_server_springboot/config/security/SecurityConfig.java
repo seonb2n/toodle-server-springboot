@@ -36,7 +36,8 @@ public class SecurityConfig {
             JwtRequestFilter jwtRequestFilter,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
             OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService,
-            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler
+            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
             ) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -49,6 +50,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                         .defaultSuccessUrl("/{login-success-url}")
                         .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
