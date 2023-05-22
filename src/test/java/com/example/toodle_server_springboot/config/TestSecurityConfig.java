@@ -5,6 +5,7 @@ import com.example.toodle_server_springboot.dto.UserAccountDto;
 import com.example.toodle_server_springboot.service.UserAccountService;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.util.Optional;
@@ -12,11 +13,14 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-@Import({SecurityConfig.class, JwtAuthenticationEntryPoint.class, JwtRequestFilter.class, JwtTokenUtil.class, JwtUserDetailsService.class})
+@Import({SecurityConfig.class, JwtAuthenticationEntryPoint.class, JwtRequestFilter.class, JwtTokenUtil.class, JwtUserDetailsService.class, OAuth2AuthenticationFailureHandler.class, OAuth2AuthenticationSuccessHandler.class})
 public class TestSecurityConfig {
 
     @MockBean
     private UserAccountService userAccountService;
+
+    @MockBean
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     /**
      * 인증된 사용자 권한 부여
