@@ -13,7 +13,7 @@ docker push 626ksb/toodle_server
 
 #frontend build
 echo ">>> FRONTEND BUILD"
-cd C:\Users\seonbin\WebstormProjects\toodle_react
+cd C:/Users/seonbin/WebstormProjects/toodle_react
 npm run build
 docker buildx build --platform linux/arm64 --tag 626ksb/toodle_frontend .
 docker push 626ksb/toodle_frontend
