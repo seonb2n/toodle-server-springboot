@@ -9,27 +9,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public record TaskRequest(
-        UUID uuid,
+        String taskId,
         String content,
         String importance,
         LocalDateTime startAt,
         LocalDateTime endAt,
-        List<ActionRequest> actionRequestList
+        List<ActionRequest> actionDtoSet
 ) {
 
-    public static TaskRequest of(UUID uuid, String content, String importance, LocalDateTime startAt, LocalDateTime endAt, List<ActionRequest> actionRequestList) {
+    public static TaskRequest of(String uuid, String content, String importance, LocalDateTime startAt, LocalDateTime endAt, List<ActionRequest> actionRequestList) {
         return new TaskRequest(uuid, content, importance, startAt, endAt, actionRequestList);
     }
 
     public TaskDto toDto(UserAccountDto userAccountDto) {
         return TaskDto.of(
-                uuid,
+                UUID.fromString(taskId),
                 userAccountDto,
                 content,
                 importance,
                 startAt,
                 endAt,
-                actionRequestList.stream()
+                actionDtoSet.stream()
                         .map(actionRequest -> actionRequest.toDto(userAccountDto)).collect(Collectors.toSet())
         );
     }

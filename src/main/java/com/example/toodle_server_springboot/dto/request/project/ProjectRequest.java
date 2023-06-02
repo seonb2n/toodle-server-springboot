@@ -8,9 +8,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public record ProjectRequest(
-        UUID uuid,
+        UUID projectId,
         String projectName,
-        List<TaskRequest> taskRequestList
+        List<TaskRequest> taskDtoSet
 ) {
 
     public static ProjectRequest of(UUID uuid, String projectName, List<TaskRequest> taskRequestList) {
@@ -19,10 +19,10 @@ public record ProjectRequest(
 
     public ProjectDto toDto(UserAccountDto userAccountDto) {
         return ProjectDto.of(
-                uuid,
+                projectId,
                 userAccountDto,
                 projectName,
-                taskRequestList.stream()
+                taskDtoSet.stream()
                         .map(taskRequest -> taskRequest.toDto(userAccountDto)).collect(Collectors.toSet())
                 );
     }

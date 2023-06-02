@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ActionRequest(
-        UUID uuid,
+        UUID actionId,
         String content,
         LocalDateTime dueDate,
         boolean isDone
@@ -18,7 +18,7 @@ public record ActionRequest(
     }
 
     public ActionDto toDto(UserAccountDto userAccountDto) {
-        return ActionDto.of(uuid, userAccountDto, content, dueDate, isDone);
+        return ActionDto.of(actionId, userAccountDto, content, dueDate, isDone);
     }
 
 }
