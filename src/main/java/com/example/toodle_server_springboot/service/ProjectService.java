@@ -99,9 +99,9 @@ public class ProjectService {
      */
     public Task registerTask(UserAccount userAccount, Project project, TaskDto taskDto) {
         var task = Task.of(userAccount, project, taskDto.content(), Task.IMPORTNACE.valueOf(taskDto.importance()));
+        taskRepository.save(task);
         taskDto.actionDtoSet()
                 .forEach(actionDto -> registerAction(userAccount, task, actionDto));
-        taskRepository.save(task);
         project.addTask(task);
         return task;
     }
