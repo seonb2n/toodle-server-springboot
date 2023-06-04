@@ -10,11 +10,12 @@ import java.util.stream.Collectors;
 public record ProjectRequest(
         UUID projectId,
         String projectName,
+        String projectColor,
         List<TaskRequest> taskDtoSet
 ) {
 
-    public static ProjectRequest of(UUID uuid, String projectName, List<TaskRequest> taskRequestList) {
-        return new ProjectRequest(uuid, projectName, taskRequestList);
+    public static ProjectRequest of(UUID uuid, String projectName, String projectColor, List<TaskRequest> taskRequestList) {
+        return new ProjectRequest(uuid, projectName, projectColor, taskRequestList);
     }
 
     public ProjectDto toDto(UserAccountDto userAccountDto) {
@@ -22,6 +23,7 @@ public record ProjectRequest(
                 projectId,
                 userAccountDto,
                 projectName,
+                projectColor,
                 taskDtoSet.stream()
                         .map(taskRequest -> taskRequest.toDto(userAccountDto)).collect(Collectors.toSet())
                 );

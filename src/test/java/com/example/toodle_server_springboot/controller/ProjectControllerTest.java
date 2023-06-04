@@ -51,7 +51,7 @@ class ProjectControllerTest {
         this.objectMapper = objectMapper;
         projectUUID = UUID.randomUUID();
         userAccountDto = UserAccountDto.of("test-email", "test-nickname", "test-pwd");
-        projectDto = ProjectDto.of(projectUUID, userAccountDto, "test-pjt-name", Set.of());
+        projectDto = ProjectDto.of(projectUUID, userAccountDto, "test-pjt-name", "#ffffff", Set.of());
     }
 
     @DisplayName("[GET]프로젝트 조회 - 인증 없을 땐 401 unAuthroized")
@@ -88,7 +88,7 @@ class ProjectControllerTest {
         //given
         given(projectService.updateProject(any(), any())).willReturn(projectDto);
         var projectUpdateRequest =
-                objectMapper.writeValueAsString(ProjectRequest.of(projectUUID, "pjtName", List.of()));
+                objectMapper.writeValueAsString(ProjectRequest.of(projectUUID, "pjtName", "#ffffff", List.of()));
 
         //when
         mvc.perform(post("/api/v1/projects/update")
@@ -110,7 +110,7 @@ class ProjectControllerTest {
         //given
         given(projectService.registerProject(any(), any())).willReturn(projectDto);
         var projectRegisterRequest =
-                objectMapper.writeValueAsString(ProjectRequest.of(projectUUID, "pjtName", List.of()));
+                objectMapper.writeValueAsString(ProjectRequest.of(projectUUID, "pjtName", "#ffffff", List.of()));
 
         //when
         mvc.perform(post("/api/v1/projects/register")

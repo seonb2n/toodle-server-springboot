@@ -33,6 +33,8 @@ public class Project extends BaseEntity {
 
     private String projectName;
 
+    private String projectColor;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Task> taskSet = new LinkedHashSet<>();
@@ -43,13 +45,14 @@ public class Project extends BaseEntity {
 
     protected Project() {}
 
-    private Project (UserAccount userAccount, String projectName) {
+    private Project (UserAccount userAccount, String projectName, String projectColor) {
         this.userAccount = userAccount;
         this.projectName = projectName;
+        this.projectColor = projectColor;
     }
 
-    public static Project of(UserAccount userAccount, String projectName) {
-        return new Project(userAccount, projectName);
+    public static Project of(UserAccount userAccount, String projectName, String projectColor) {
+        return new Project(userAccount, projectName, projectColor);
     }
 
     public void update(String projectName) {

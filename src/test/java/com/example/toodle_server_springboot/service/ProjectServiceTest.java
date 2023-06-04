@@ -64,7 +64,7 @@ class ProjectServiceTest {
         projectId = UUID.randomUUID();
         taskId = UUID.randomUUID();
         actionId = UUID.randomUUID();
-        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test", new HashSet<>());
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test", "#ffffff", new HashSet<>());
         taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test", "HIGH", LocalDateTime.now().minusDays(1L), LocalDateTime.now().plusDays(1L), new HashSet<>());
         actionDto = new ActionDto(actionId, UserAccountDto.from(userAccount), "action-test", LocalDateTime.now().plusDays(1L),false);
         projectEntity = projectDto.toEntity(userAccount);
@@ -95,7 +95,7 @@ class ProjectServiceTest {
     @Test
     void givenProjectDto_whenRegisterProject_thenReturnProject() {
         //given
-        given(projectRepository.save(any(Project.class))).willReturn(Project.of(userAccount, "project-test"));
+        given(projectRepository.save(any(Project.class))).willReturn(Project.of(userAccount, "project-test", "#ffffff"));
 
         //when
         var savedProject = sut.registerProject(userAccount, projectDto);
@@ -110,7 +110,7 @@ class ProjectServiceTest {
     void givenProjectDtoWithTask_whenRegisterProject_thenReturnProject() {
         //given
         projectDto.taskDtoSet().add(taskDto);
-        given(projectRepository.save(any(Project.class))).willReturn(Project.of(userAccount, "project-test"));
+        given(projectRepository.save(any(Project.class))).willReturn(Project.of(userAccount, "project-test", "#ffffff"));
         given(taskRepository.save(any(Task.class))).willReturn(Task.of(userAccount, any(),"task-test", Task.IMPORTNACE.HIGH));
 
         //when
@@ -146,7 +146,7 @@ class ProjectServiceTest {
     @Test
     void givenProjectDto_whenUpdateProject_thenReturnProject() {
         //given
-        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", "#ffffff", new HashSet<>());
         given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
 
         //when
@@ -162,7 +162,7 @@ class ProjectServiceTest {
     @Test
     void givenProjectWithTaskDto_whenUpdateProject_thenReturnProject() {
         //given
-        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", "#ffffff", new HashSet<>());
         taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test2", "HIGH", LocalDateTime.now().minusDays(1L), LocalDateTime.now().plusDays(1L), new HashSet<>());
 
         projectDto.taskDtoSet().add(taskDto);
@@ -186,7 +186,7 @@ class ProjectServiceTest {
     @Test
     public void givenProjectWithNewTaskDto_whenUpdateProject_thenReturnProject() throws Exception {
         //given
-        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", "#ffffff", new HashSet<>());
         taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test2", "HIGH", LocalDateTime.now().minusDays(1L), LocalDateTime.now().plusDays(1L), new HashSet<>());
         projectDto.taskDtoSet().add(taskDto);
         given(projectRepository.findById(projectId)).willReturn(Optional.of(projectEntity));
@@ -206,7 +206,7 @@ class ProjectServiceTest {
     @Test
     void givenProjectWithTaskWithActionDto_whenUpdateProject_thenReturnProject() {
         //given
-        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", "#ffffff", new HashSet<>());
         taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test2", "HIGH", LocalDateTime.now().minusDays(1L), LocalDateTime.now().plusDays(1L), new HashSet<>());
         actionDto = new ActionDto(actionId, UserAccountDto.from(userAccount), "action-test2", LocalDateTime.now().plusDays(1L),false);
         taskDto.actionDtoSet().add(actionDto);
@@ -236,7 +236,7 @@ class ProjectServiceTest {
     @Test
     public void givenProjectWithTaskWithNewAction_whenUpdateProject_thenReturnProject() throws Exception {
         //given
-        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", new HashSet<>());
+        projectDto = new ProjectDto(projectId, UserAccountDto.from(userAccount), "project-test2", "#ffffff", new HashSet<>());
         taskDto = new TaskDto(taskId, UserAccountDto.from(userAccount), "task-test2", "HIGH", LocalDateTime.now().minusDays(1L), LocalDateTime.now().plusDays(1L), new HashSet<>());
         actionDto = new ActionDto(actionId, UserAccountDto.from(userAccount), "action-test2", LocalDateTime.now().plusDays(1L),false);
         taskDto.actionDtoSet().add(actionDto);

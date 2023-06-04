@@ -18,8 +18,8 @@ insert into tb_postit (postit_id, postit_client_id, created_at, created_by, modi
 values ('44240e8a-eaab-4a8f-831a-87a7e8fdc0b6', 'b6b703a3-1646-4d9a-9c40-3ee6f2bf8806', now(), 'sbkim', now(), 'sbkim', '저녁 식재료 사기!', false, '2e7bafdc-18b7-423a-9a04-1edbce00c560', 'bd8e27f9-d5d5-4d7f-87c0-ec474828145f');
 
 -- sbkim 이 가진 프로젝트
-insert into tb_project (project_id, created_at, created_by, modified_at, modified_by, project_name, user_id)
-values ('1017449f-daf1-4c03-9bd9-1d157c90b61f', now(), 'sbkim', now(), 'sbkim', '프로젝트 1', '2e7bafdc-18b7-423a-9a04-1edbce00c560');
+insert into tb_project (project_id, created_at, created_by, modified_at, modified_by, project_name, project_color, user_id)
+values ('1017449f-daf1-4c03-9bd9-1d157c90b61f', now(), 'sbkim', now(), 'sbkim', '프로젝트 1', '#ffffff', '2e7bafdc-18b7-423a-9a04-1edbce00c560');
 
 -- sbkim 이 가진 테스크
 insert into tb_task (task_id, created_at, created_by, modified_at, modified_by, content, task_importance, project_id, user_id, task_start_at, task_end_at)

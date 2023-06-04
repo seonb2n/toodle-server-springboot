@@ -12,11 +12,12 @@ public record ProjectDto(
         UUID projectId,
         UserAccountDto userAccountDto,
         String projectName,
+        String projectColor,
         Set<TaskDto> taskDtoSet
 ) {
 
-    public static ProjectDto of(UUID projectId, UserAccountDto userAccountDto, String projectName, Set<TaskDto> taskDtoSet) {
-        return new ProjectDto(projectId, userAccountDto, projectName, taskDtoSet);
+    public static ProjectDto of(UUID projectId, UserAccountDto userAccountDto, String projectName, String projectColor, Set<TaskDto> taskDtoSet) {
+        return new ProjectDto(projectId, userAccountDto, projectName, projectColor, taskDtoSet);
     }
 
     public static ProjectDto from(Project project) {
@@ -24,6 +25,7 @@ public record ProjectDto(
                 project.getProjectId(),
                 UserAccountDto.from(project.getUserAccount()),
                 project.getProjectName(),
+                project.getProjectColor(),
                 project.getTaskSet().stream().map(TaskDto::from).collect(Collectors.toSet())
         );
     }
@@ -31,7 +33,8 @@ public record ProjectDto(
     public Project toEntity(UserAccount userAccount) {
         return Project.of(
                 userAccount,
-                projectName
+                projectName,
+                projectColor
         );
     }
 
