@@ -5,7 +5,7 @@ import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import java.util.List;
 
 public record TodayPostItResponse(
-        List<String> content
+        List<String> contentDtoList
 ) {
 
     public static TodayPostItResponse of(

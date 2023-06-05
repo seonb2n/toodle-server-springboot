@@ -58,7 +58,7 @@ class PostItRepositoryTest {
     @Test
     void givenPostIt_whenInserting_thenReturnPostIt() {
         //given
-        PostIt postIt = PostIt.of("content", userAccount);
+        PostIt postIt = PostIt.of("contentDtoList", userAccount);
         postIt.setPostICategory(category);
 
         //when
@@ -72,14 +72,14 @@ class PostItRepositoryTest {
     @Test
     void givenPostItList_whenUpdate_thenReturnPostItList() {
         //given
-        PostIt postIt1 = PostIt.of("content", userAccount);
-        PostIt postIt2 = PostIt.of("content", userAccount);
+        PostIt postIt1 = PostIt.of("contentDtoList", userAccount);
+        PostIt postIt2 = PostIt.of("contentDtoList", userAccount);
         postIt1.setPostICategory(category);
         postIt2.setPostICategory(category);
         var postItList = postItRepository.saveAll(List.of(postIt1, postIt2));
 
         //when
-        postIt1.setContent("content-update!");
+        postIt1.setContent("contentDtoList-update!");
         var updatedPostItList = postItRepository.saveAll(List.of(postIt1, postIt2));
 
         //then
@@ -92,8 +92,8 @@ class PostItRepositoryTest {
 //    @Test
 //    public void givenPostItCategory_whenFindPostItCategory_thenReturnPostItList() throws Exception {
 //        //given
-//        PostIt postIt1 = PostIt.of("content", userAccount);
-//        PostIt postIt2 = PostIt.of("content", userAccount);
+//        PostIt postIt1 = PostIt.of("contentDtoList", userAccount);
+//        PostIt postIt2 = PostIt.of("contentDtoList", userAccount);
 //        postIt1.setPostICategory(category);
 //        postIt2.setPostICategory(category);
 //        postItRepository.saveAll(List.of(postIt1, postIt2));
@@ -109,7 +109,7 @@ class PostItRepositoryTest {
 //    @Test
 //    public void givenNothing_whenDeletePostItCategory_thenReturnOrphanPostItList() throws Exception {
 //        //given
-//        PostIt postIt1 = PostIt.of("content", userAccount);
+//        PostIt postIt1 = PostIt.of("contentDtoList", userAccount);
 //        postIt1.setPostICategory(category);
 //        postIt1 = postItRepository.save(postIt1);
 //
