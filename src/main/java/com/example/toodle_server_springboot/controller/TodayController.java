@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * today 화면에서 요구되는 요청을 처리하는 controller
  */
 @RestController
-@RequestMapping("/api/vi/today")
+@RequestMapping("/api/v1/today")
 @RequiredArgsConstructor
 public class TodayController {
 

@@ -60,7 +60,7 @@ class TodayControllerTest {
         given(postItService.getAllPostIt(any())).willReturn(List.of(postItDto));
 
         //when
-        MvcResult result = mvc.perform(get("/api/vi/today"))
+        MvcResult result = mvc.perform(get("/api/v1/today"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -69,7 +69,7 @@ class TodayControllerTest {
         TodayResponse todayResponse = objectMapper.readValue(responseBody, TodayResponse.class);
 
         assertEquals(1, todayResponse.projectResponse().projectDtoList().size());
-        assertEquals(1, todayResponse.todayPostItResponse().contentDtoList().size());
+        assertEquals(1, todayResponse.todayPostItResponse().todayPostItContentDtoList().size());
     }
 
 }
