@@ -7,7 +7,9 @@ import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.PostItService;
 import com.example.toodle_server_springboot.service.ProjectService;
 import com.example.toodle_server_springboot.service.UserAccountService;
+import com.example.toodle_server_springboot.util.LogCreateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,7 @@ public class TodayController {
      * @return
      */
     @GetMapping
+    @LogCreateRequest(requestURL = "/api/v1/today", requestMethod = HttpMethod.GET)
     public ResponseEntity<TodayResponse> todayResponse(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
