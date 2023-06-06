@@ -27,10 +27,10 @@ services:
 #    container_name: backend
 #    build: .
 #    environment:
-      SPRING_PROFILES_ACTIVE: test
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/toodle
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+#      SPRING_PROFILES_ACTIVE: test
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/toodle
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
 #    ports:
 #      - "8080:8080"
 #    depends_on:
