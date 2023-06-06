@@ -7,8 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class UserRequestLogService {
@@ -19,14 +17,14 @@ public class UserRequestLogService {
      * 생성된 로그를 서버로 저장하는 메서드
      */
     public void createLog(
-            UUID userId,
+            String userEmail,
             String requestURL,
             HttpMethod requestMethod,
             HttpStatus responseCode,
             String userRequestData,
             String userResponseData
     ) {
-        userRequestLogRepository.save(UserRequestLog.of(userId, requestURL, requestMethod, responseCode, userRequestData, userResponseData));
+        userRequestLogRepository.save(UserRequestLog.of(userEmail, requestURL, requestMethod, responseCode, userRequestData, userResponseData));
     }
 
 }

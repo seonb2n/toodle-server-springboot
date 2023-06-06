@@ -20,7 +20,7 @@ public class UserRequestLog extends BaseEntity {
     @Column(name = "log_id")
     private UUID logId;
 
-    private UUID userId;
+    private String userEmail;
 
     private String requestURL;
 
@@ -37,8 +37,8 @@ public class UserRequestLog extends BaseEntity {
     protected UserRequestLog() {
     }
 
-    private UserRequestLog(UUID userId, String requestURL, HttpMethod requestMethod, HttpStatus responseCode, String userRequestData, String userResponseData) {
-        this.userId = userId;
+    private UserRequestLog(String userEmail, String requestURL, HttpMethod requestMethod, HttpStatus responseCode, String userRequestData, String userResponseData) {
+        this.userEmail = userEmail;
         this.requestURL = requestURL;
         this.requestMethod = requestMethod;
         this.responseCode = responseCode;
@@ -46,8 +46,8 @@ public class UserRequestLog extends BaseEntity {
         this.userResponseData = userResponseData;
     }
 
-    public static UserRequestLog of(UUID userId, String requestURL, HttpMethod requestMethod, HttpStatus responseCode, String userRequestData, String userResponseData) {
-        return new UserRequestLog(userId, requestURL, requestMethod, responseCode, userRequestData, userResponseData);
+    public static UserRequestLog of(String userEmail, String requestURL, HttpMethod requestMethod, HttpStatus responseCode, String userRequestData, String userResponseData) {
+        return new UserRequestLog(userEmail, requestURL, requestMethod, responseCode, userRequestData, userResponseData);
     }
 
     @Override
@@ -55,11 +55,11 @@ public class UserRequestLog extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserRequestLog that = (UserRequestLog) o;
-        return Objects.equals(logId, that.logId) && Objects.equals(userId, that.userId) && Objects.equals(requestURL, that.requestURL) && requestMethod == that.requestMethod;
+        return Objects.equals(logId, that.logId) && Objects.equals(userEmail, that.userEmail) && Objects.equals(requestURL, that.requestURL) && requestMethod == that.requestMethod;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(logId, userId, requestURL, requestMethod);
+        return Objects.hash(logId, userEmail, requestURL, requestMethod);
     }
 }

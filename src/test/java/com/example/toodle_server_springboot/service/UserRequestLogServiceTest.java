@@ -14,8 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -34,12 +32,12 @@ class UserRequestLogServiceTest {
     @Test
     void givenCreateLogRequest_whenCreateLog_thenSaveLog() {
         //given
-        UUID userIdUUID = UUID.randomUUID();
-        UserRequestLog log = UserRequestLog.of(userIdUUID, "requestURL", HttpMethod.GET, HttpStatus.OK, "user-request", "user-response");
+        String userEmail = "test-email";
+        UserRequestLog log = UserRequestLog.of(userEmail, "requestURL", HttpMethod.GET, HttpStatus.OK, "user-request", "user-response");
         given(userRequestLogRepository.save(log)).willReturn(log);
 
         //when
-        sut.createLog(userIdUUID, "requestURL", HttpMethod.GET, HttpStatus.OK, "user-request", "user-response");
+        sut.createLog(userEmail, "requestURL", HttpMethod.GET, HttpStatus.OK, "user-request", "user-response");
 
         //then
         verify(userRequestLogRepository).save(any(UserRequestLog.class));

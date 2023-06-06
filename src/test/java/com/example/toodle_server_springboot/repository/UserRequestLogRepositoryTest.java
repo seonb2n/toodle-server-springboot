@@ -12,8 +12,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("로그 DB JPA 연결 테스트")
@@ -33,7 +31,7 @@ class UserRequestLogRepositoryTest {
     @Test
     void givenTestSql_whenSelecting_thenReturnUserRequestLog() {
         //given
-        UserRequestLog log = UserRequestLog.of(UUID.randomUUID(), "requestURL", HttpMethod.GET, HttpStatus.OK, "user-request", "user-response");
+        UserRequestLog log = UserRequestLog.of("test-email", "requestURL", HttpMethod.GET, HttpStatus.OK, "user-request", "user-response");
         userRequestLogRepository.save(log);
 
         //when
