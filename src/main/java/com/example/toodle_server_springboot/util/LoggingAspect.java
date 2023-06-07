@@ -53,10 +53,10 @@ public class LoggingAspect {
 
         // UserRequestLogService 호출
         if (userRequestData.isPresent()) {
-            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, userRequestData.get().toString(), userResponseData);
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, userRequestData.get().toString().substring(0, 4000), userResponseData.substring(0, 4000));
         }
         else {
-            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null, userResponseData);
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null, userResponseData.substring(0, 4000));
         }
     }
 
