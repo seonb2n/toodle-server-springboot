@@ -30,8 +30,10 @@ public class UserRequestLog extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private HttpStatus responseCode;
 
+    @Column(length = 4000)
     private String userRequestData;
 
+    @Column(length = 4000)
     private String userResponseData;
 
     protected UserRequestLog() {

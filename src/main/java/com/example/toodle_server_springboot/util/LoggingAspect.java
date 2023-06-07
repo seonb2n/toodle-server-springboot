@@ -3,6 +3,7 @@ package com.example.toodle_server_springboot.util;
 import com.example.toodle_server_springboot.dto.request.project.ProjectRequest;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.UserRequestLogService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 @Aspect
 @Component
@@ -21,13 +23,13 @@ import java.lang.reflect.Method;
 public class LoggingAspect {
 
     private final UserRequestLogService userRequestLogService;
-
+    private final ObjectMapper objectMapper;
 
     @Pointcut("@annotation(LogCreateRequest)")
     public void logRequestPointcut() {
     }
 
-    @AfterReturning(pointcut = "logRequestPointcut() && execution(* com.example.controller.*.*(..))", returning = "response")
+    @AfterReturning(pointcut = "logRequestPointcut() && execution(* com.example.toodle_server_springboot.controller.*.*(..))", returning = "response")
     public void logRequest(JoinPoint joinPoint, Object response) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
@@ -46,12 +48,16 @@ public class LoggingAspect {
         assert userPrincipal != null;
         String userId = userPrincipal.email();
         HttpStatus responseCode = HttpStatus.OK;
-        assert projectRequest != null;
-        String userRequestData = projectRequest.toString();
+        Optional<ProjectRequest> userRequestData = Optional.ofNullable(projectRequest);
         String userResponseData = response.toString();
 
         // UserRequestLogService 호출
-        userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, userRequestData, userResponseData);
+        if (userRequestData.isPresent()) {
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, userRequestData.get().toString(), userResponseData);
+        }
+        else {
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null, userResponseData);
+        }
     }
 
     private UserPrincipal getUserPrincipalArgument(Object[] args) {
