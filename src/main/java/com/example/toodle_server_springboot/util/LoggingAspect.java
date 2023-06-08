@@ -53,10 +53,10 @@ public class LoggingAspect {
 
         // UserRequestLogService 호출
         if (userRequestData.isPresent()) {
-            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, userRequestData.get().toString().substring(0, 4000), userResponseData.substring(0, 4000));
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, cutStringUnder4000(userRequestData.get().toString()), userResponseData.substring(0, 4000));
         }
         else {
-            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null, userResponseData.substring(0, 4000));
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null, cutStringUnder4000(userResponseData));
         }
     }
 
@@ -78,5 +78,12 @@ public class LoggingAspect {
         return null;
     }
 
+    private String cutStringUnder4000(String origin) {
+        if (origin.length() <= 4000) {
+            return origin;
+        } else {
+            return origin.substring(0, 4000);
+        }
+    }
 
 }
