@@ -19,7 +19,7 @@ values ('44240e8a-eaab-4a8f-831a-87a7e8fdc0b6', 'b6b703a3-1646-4d9a-9c40-3ee6f2b
 
 -- sbkim 이 가진 프로젝트
 insert into tb_project (project_id, created_at, created_by, modified_at, modified_by, project_name, project_color, user_id)
-values ('1017449f-daf1-4c03-9bd9-1d157c90b61f', now(), 'sbkim', now(), 'sbkim', '프로젝트 1', '#FFE08C', '2e7bafdc-18b7-423a-9a04-1edbce00c560');
+values ('1017449f-daf1-4c03-9bd9-1d157c90b61f', now(), 'sbkim', now(), 'sbkim', '프로젝트 1', '#DAD9FF', '2e7bafdc-18b7-423a-9a04-1edbce00c560');
 
 -- sbkim 이 가진 테스크
 insert into tb_task (task_id, created_at, created_by, modified_at, modified_by, content, task_importance, project_id, user_id, task_start_at, task_end_at)
