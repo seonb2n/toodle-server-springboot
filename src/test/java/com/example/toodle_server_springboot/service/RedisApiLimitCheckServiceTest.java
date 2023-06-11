@@ -1,34 +1,56 @@
 package com.example.toodle_server_springboot.service;
 
 import com.example.toodle_server_springboot.config.RedisConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @DisplayName("보안 로직 - IP 별로 API 호출 제약 체크")
 @ExtendWith(MockitoExtension.class)
 @Import({RedisConfig.class, RedisApiLimitCheckService.class})
 class RedisApiLimitCheckServiceTest {
 
-    private final RedisApiLimitCheckService sut;
+    @InjectMocks
+    private RedisApiLimitCheckService sut;
+
+    @Mock
+    private RedisTemplate<String, Object> redisTemplate;
+    private static ValueOperations<String, Object> valueOperationsMock;
+
     private final String TEST_IP = "123.456.789.001";
+    private final String TEST_IP_HEADER = "LIMIT_IP_";
 
-    //todo 실제 REDIS 서버가 아니라 가상의 Redis 서버에서 테스트해야 함
-
-    RedisApiLimitCheckServiceTest(@Autowired RedisApiLimitCheckService redisApiLimitCheckService) {
-        this.sut = redisApiLimitCheckService;
+    @BeforeEach
+    void init() {
+        valueOperationsMock = Mockito.mock(ValueOperations.class);
+        when(redisTemplate.opsForValue()).thenReturn(valueOperationsMock);
     }
 
     @DisplayName("IP 정상 저장 및 호출 테스트")
     @Test
     public void givenIP_whenRequestAPI_thenSaveApiRequestCount() throws Exception {
-        //given &when
+        //given
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        given(redisTemplate.opsForValue().get(any())).willReturn("0");
+
+        //when
         sut.setNewIP(TEST_IP);
 
         //then
@@ -38,7 +60,12 @@ class RedisApiLimitCheckServiceTest {
     @DisplayName("IP 저장 후 초기화 테스트")
     @Test
     public void givenIP_whenRemoveIP_thenReturnNothing() throws Exception {
-        //given & when
+        //given
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        given(redisTemplate.delete(TEST_IP_HEADER  +TEST_IP)).willReturn(true);
+        given(redisTemplate.opsForValue().get(any())).willReturn(null);
+
+        //when
         sut.setNewIP(TEST_IP);
         sut.clearIP(TEST_IP);
 
@@ -49,8 +76,12 @@ class RedisApiLimitCheckServiceTest {
     @DisplayName("IP 정상 저장 후, 카운트 증가 테스트")
     @Test
     public void givenIP_whenRequestAPI_thenCheckAPIRequestCount() throws Exception {
-        //given & when
-        sut.clearIP(TEST_IP);
+        //given
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        given(redisTemplate.opsForValue().get(any())).willReturn("1");
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 2, 60*60, TimeUnit.SECONDS);
+
+        // when
         sut.setNewIP(TEST_IP);
         sut.addCount(TEST_IP);
 
@@ -62,7 +93,9 @@ class RedisApiLimitCheckServiceTest {
     @Test
     public void givenIP_whenRequestAPI_thenValidIP() throws Exception {
         //given
-        sut.clearIP(TEST_IP);
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        given(redisTemplate.opsForValue().get(any())).willReturn("10");
+
         sut.setNewIP(TEST_IP);
         for (int i = 0; i < 10; i++) {
             sut.addCount(TEST_IP);
