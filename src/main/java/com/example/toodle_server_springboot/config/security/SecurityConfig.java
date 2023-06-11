@@ -34,6 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             JwtRequestFilter jwtRequestFilter,
+            APIRequestLimitFilter apiRequestLimitFilter,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
             OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService,
             OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
@@ -59,6 +60,7 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(apiRequestLimitFilter, JwtRequestFilter.class)
                 .build();
     }
 
