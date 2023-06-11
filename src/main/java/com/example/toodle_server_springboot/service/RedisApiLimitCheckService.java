@@ -13,7 +13,7 @@ public class RedisApiLimitCheckService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final int MAX_API_CALL_LIMIT = 10;
-    private final int EXPIRATION_DURATION = 60 * 60;
+    private final int EXPIRATION_DURATION = 60;
     private final String IP_HEADER = "LIMIT_IP_";
 
     /**
