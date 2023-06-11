@@ -77,7 +77,7 @@ public class RedisApiLimitCheckService {
      * @param ip
      * @return
      */
-    public boolean IPIsValid(String ip) {
+    public boolean IPisInvalid(String ip) {
         return checkIP(ip) > MAX_API_CALL_LIMIT;
     }
 
