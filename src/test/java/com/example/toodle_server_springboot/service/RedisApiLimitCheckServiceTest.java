@@ -104,4 +104,5 @@ class RedisApiLimitCheckServiceTest {
         //when & then
         assertFalse(sut.IPisInvalid(TEST_IP));
     }
+
 }
