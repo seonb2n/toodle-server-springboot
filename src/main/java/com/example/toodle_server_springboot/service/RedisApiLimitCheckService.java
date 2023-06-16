@@ -22,7 +22,7 @@ public class RedisApiLimitCheckService {
      * @return
      */
     public void setNewIP(String ip) {
-        redisTemplate.opsForValue().set(IP_HEADER + ip, 1, EXPIRATION_DURATION, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(IP_HEADER + ip, "1", EXPIRATION_DURATION, TimeUnit.SECONDS);
     }
 
     /**
@@ -50,7 +50,7 @@ public class RedisApiLimitCheckService {
             setNewIP(ip);
         }
         else {
-            redisTemplate.opsForValue().set(IP_HEADER + ip, ipCount+1, EXPIRATION_DURATION, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(IP_HEADER + ip, String.valueOf(ipCount+1), EXPIRATION_DURATION, TimeUnit.SECONDS);
         }
     }
 
