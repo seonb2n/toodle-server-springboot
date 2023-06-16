@@ -2,6 +2,7 @@ package com.example.toodle_server_springboot.config;
 
 import com.example.toodle_server_springboot.config.security.*;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
+import com.example.toodle_server_springboot.service.RedisApiLimitCheckService;
 import com.example.toodle_server_springboot.service.UserAccountService;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -21,6 +22,9 @@ public class TestSecurityConfig {
 
     @MockBean
     private ClientRegistrationRepository clientRegistrationRepository;
+
+    @MockBean
+    private RedisApiLimitCheckService redisApiLimitCheckService;
 
     /**
      * 인증된 사용자 권한 부여
