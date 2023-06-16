@@ -47,7 +47,7 @@ class RedisApiLimitCheckServiceTest {
     @Test
     public void givenIP_whenRequestAPI_thenSaveApiRequestCount() throws Exception {
         //given
-        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, "1", 60, TimeUnit.SECONDS);
         given(redisTemplate.opsForValue().get(any())).willReturn("0");
 
         //when
@@ -61,7 +61,7 @@ class RedisApiLimitCheckServiceTest {
     @Test
     public void givenIP_whenRemoveIP_thenReturnNothing() throws Exception {
         //given
-        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, "1", 60, TimeUnit.SECONDS);
         given(redisTemplate.delete(TEST_IP_HEADER  +TEST_IP)).willReturn(true);
         given(redisTemplate.opsForValue().get(any())).willReturn(null);
 
@@ -77,9 +77,9 @@ class RedisApiLimitCheckServiceTest {
     @Test
     public void givenIP_whenRequestAPI_thenCheckAPIRequestCount() throws Exception {
         //given
-        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, "1", 60, TimeUnit.SECONDS);
         given(redisTemplate.opsForValue().get(any())).willReturn("1");
-        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 2, 60*60, TimeUnit.SECONDS);
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, "2", 60, TimeUnit.SECONDS);
 
         // when
         sut.setNewIP(TEST_IP);
@@ -93,7 +93,7 @@ class RedisApiLimitCheckServiceTest {
     @Test
     public void givenIP_whenRequestAPI_thenValidIP() throws Exception {
         //given
-        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, 1, 60*60, TimeUnit.SECONDS);
+        doNothing().when(valueOperationsMock).set(TEST_IP_HEADER + TEST_IP, "1", 60, TimeUnit.SECONDS);
         given(redisTemplate.opsForValue().get(any())).willReturn("10");
 
         sut.setNewIP(TEST_IP);
