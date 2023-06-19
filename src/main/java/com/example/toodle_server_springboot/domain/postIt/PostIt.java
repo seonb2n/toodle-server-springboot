@@ -3,14 +3,19 @@ package com.example.toodle_server_springboot.domain.postIt;
 import com.example.toodle_server_springboot.domain.BaseEntity;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.postit.PostItDto;
+import java.util.Objects;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -67,13 +72,15 @@ public class PostIt extends BaseEntity {
         return new PostIt(content, userAccount, isDone);
     }
 
-    public static PostIt of(String content, PostItCategory postItCategory, UserAccount userAccount) {
+    public static PostIt of(String content, PostItCategory postItCategory,
+        UserAccount userAccount) {
         PostIt postIt = new PostIt(content, userAccount, false);
         postIt.setPostICategory(postItCategory);
         return postIt;
     }
 
-    public static PostIt of(UUID postItClientId, String content, PostItCategory postItCategory, UserAccount userAccount, boolean isDone) {
+    public static PostIt of(UUID postItClientId, String content, PostItCategory postItCategory,
+        UserAccount userAccount, boolean isDone) {
         PostIt postIt = new PostIt(content, userAccount, isDone);
         postIt.setPostICategory(postItCategory);
         postIt.setPostItClientId(postItClientId);
@@ -82,6 +89,7 @@ public class PostIt extends BaseEntity {
 
     /**
      * PostItDto 와 비교해서 내용을 업데이트한다.
+     *
      * @param postItDto
      */
     public void update(PostItDto postItDto) {
@@ -92,10 +100,15 @@ public class PostIt extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PostIt postIt = (PostIt) o;
-        return isDone == postIt.isDone && Objects.equals(postItId, postIt.postItId) && Objects.equals(content, postIt.content);
+        return isDone == postIt.isDone && Objects.equals(postItId, postIt.postItId)
+            && Objects.equals(content, postIt.content);
     }
 
     @Override

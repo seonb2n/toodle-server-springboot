@@ -3,9 +3,9 @@ package com.example.toodle_server_springboot.dto;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 
 public record UserAccountDto(
-        String email,
-        String password,
-        String nickname
+    String email,
+    String password,
+    String nickname
 ) {
 
     public static UserAccountDto of(String email, String password, String nickname) {
@@ -14,17 +14,17 @@ public record UserAccountDto(
 
     public static UserAccountDto from(UserAccount entity) {
         return new UserAccountDto(
-                entity.getEmail(),
-                entity.getPassword(),
-                entity.getNickname()
+            entity.getEmail(),
+            entity.getPassword(),
+            entity.getNickname()
         );
     }
 
     public UserAccount toEntity() {
         return UserAccount.of(
-                email,
-                nickname,
-                password
+            email,
+            nickname,
+            password
         );
     }
 }

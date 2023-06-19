@@ -10,13 +10,18 @@ import com.example.toodle_server_springboot.dto.response.UserAccountResponse;
 import com.example.toodle_server_springboot.repository.SessionRepository;
 import com.example.toodle_server_springboot.service.UserAccountService;
 import com.sun.istack.NotNull;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -37,8 +42,10 @@ public class UserAccountController {
      * @return
      */
     @PostMapping("/register")
-    public UserAccountResponse registerUser(@RequestBody UserAccountRegisterRequest userAccountRegisterRequest) {
-        var registerDto = userAccountService.registerUser(userAccountRegisterRequest.userEmail(), userAccountRegisterRequest.userPassword(), userAccountRegisterRequest.userNickName());
+    public UserAccountResponse registerUser(
+        @RequestBody UserAccountRegisterRequest userAccountRegisterRequest) {
+        var registerDto = userAccountService.registerUser(userAccountRegisterRequest.userEmail(),
+            userAccountRegisterRequest.userPassword(), userAccountRegisterRequest.userNickName());
         var userDetails = jwtUserDetailsService.loadUserByUsername(registerDto.email());
         var token = jwtTokenUtil.generateToken(userDetails);
         return UserAccountResponse.from(registerDto, token);
@@ -53,10 +60,11 @@ public class UserAccountController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> authenticateUser(
-            @RequestBody UserAccountAuthenticateRequest request,
-            @NotNull HttpSession session
+        @RequestBody UserAccountAuthenticateRequest request,
+        @NotNull HttpSession session
     ) throws Exception {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
+        var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(),
+            request.password());
         authenticationManager.authenticate(authenticationToken);
         var userDetails = jwtUserDetailsService.loadUserByUsername(request.email());
         sessionRepository.saveSession(session, request.email());
@@ -65,14 +73,14 @@ public class UserAccountController {
     }
 
 
-
     @GetMapping("/checkEmail")
     public ResponseEntity<?> checkUserAccountEmail(@RequestParam String userEmail) {
         return ResponseEntity.ok(userAccountService.checkEmail(userEmail));
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<Void> changePassword(@RequestBody UserAccountChangePasswordRequest request) {
+    public ResponseEntity<Void> changePassword(
+        @RequestBody UserAccountChangePasswordRequest request) {
         userAccountService.sendEmailToUser(request.userEmail());
         return ResponseEntity.ok().build();
     }

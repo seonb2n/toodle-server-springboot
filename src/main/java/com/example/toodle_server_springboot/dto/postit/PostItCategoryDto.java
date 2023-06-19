@@ -2,12 +2,11 @@ package com.example.toodle_server_springboot.dto.postit;
 
 import com.example.toodle_server_springboot.domain.postIt.PostItCategory;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
-
 import java.util.UUID;
 
 public record PostItCategoryDto(
-        UUID postItCategoryClientId,
-        String title
+    UUID postItCategoryClientId,
+    String title
 ) {
 
     public static PostItCategoryDto of(String title) {
@@ -20,15 +19,15 @@ public record PostItCategoryDto(
 
     public static PostItCategoryDto from(PostItCategory postItCategory) {
         return PostItCategoryDto.of(
-                postItCategory.getPostItCategoryClientId(),
-                postItCategory.getTitle()
+            postItCategory.getPostItCategoryClientId(),
+            postItCategory.getTitle()
         );
     }
 
     public PostItCategory toEntity(UserAccount userAccount) {
         return PostItCategory.of(
-                title,
-                userAccount
+            title,
+            userAccount
         );
     }
 }

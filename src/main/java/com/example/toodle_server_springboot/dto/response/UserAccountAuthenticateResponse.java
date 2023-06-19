@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 public record UserAccountAuthenticateResponse(
-        String jwtToken
+    String jwtToken
 ) implements Serializable {
 
     @Serial

@@ -13,20 +13,20 @@ public class MailBodyForm {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html>\n" +
-                        "<html>\n" +
-                        "<head>\n" +
-                        "\t<meta charset=\"UTF-8\">\n" +
-                        "\t<title>안내</title>\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "\t<h1>")
-                .append(username)
-                .append(" 님 안녕하세요.")
-                .append("</h1>")
-                .append("<p>")
-                .append(content)
-                .append("</p>")
-                .append("</body></html>")
+                "<html>\n" +
+                "<head>\n" +
+                "\t<meta charset=\"UTF-8\">\n" +
+                "\t<title>안내</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "\t<h1>")
+            .append(username)
+            .append(" 님 안녕하세요.")
+            .append("</h1>")
+            .append("<p>")
+            .append(content)
+            .append("</p>")
+            .append("</body></html>")
         ;
 
         return sb.toString();

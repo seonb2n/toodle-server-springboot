@@ -16,8 +16,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var searchedUser =  userAccountService.findUserAccountDto(username);
+        var searchedUser = userAccountService.findUserAccountDto(username);
         return searchedUser.map(UserPrincipal::from)
-                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다 - username: " + username));
+            .orElseThrow(
+                () -> new UsernameNotFoundException("유저를 찾을 수 없습니다 - username: " + username));
     }
 }

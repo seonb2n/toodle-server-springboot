@@ -1,8 +1,7 @@
 package com.example.toodle_server_springboot.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Random;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TmpPasswordGenerator {
@@ -30,7 +29,7 @@ public class TmpPasswordGenerator {
         password[2] = specialCharacters.charAt(random.nextInt(specialCharacters.length()));
         password[3] = numbers.charAt(random.nextInt(numbers.length()));
 
-        for(int i = 4; i< length ; i++) {
+        for (int i = 4; i < length; i++) {
             password[i] = combinedChars.charAt(random.nextInt(combinedChars.length()));
         }
 

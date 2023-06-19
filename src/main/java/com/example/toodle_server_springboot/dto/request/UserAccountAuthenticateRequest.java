@@ -1,14 +1,11 @@
 package com.example.toodle_server_springboot.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import java.io.Serial;
 import java.io.Serializable;
 
 public record UserAccountAuthenticateRequest(
-        String email,
-        String password
+    String email,
+    String password
 ) implements Serializable {
 
     @Serial

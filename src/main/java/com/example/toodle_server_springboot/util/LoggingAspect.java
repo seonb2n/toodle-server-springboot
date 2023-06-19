@@ -4,6 +4,8 @@ import com.example.toodle_server_springboot.dto.request.project.ProjectRequest;
 import com.example.toodle_server_springboot.dto.security.UserPrincipal;
 import com.example.toodle_server_springboot.service.UserRequestLogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.reflect.Method;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -13,9 +15,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
-import java.util.Optional;
 
 @Aspect
 @Component
@@ -53,10 +52,12 @@ public class LoggingAspect {
 
         // UserRequestLogService 호출
         if (userRequestData.isPresent()) {
-            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, cutStringUnder4000(userRequestData.get().toString()), userResponseData.substring(0, 4000));
-        }
-        else {
-            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null, cutStringUnder4000(userResponseData));
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode,
+                cutStringUnder4000(userRequestData.get().toString()),
+                userResponseData.substring(0, 4000));
+        } else {
+            userRequestLogService.createLog(userId, requestURL, requestMethod, responseCode, null,
+                cutStringUnder4000(userResponseData));
         }
     }
 

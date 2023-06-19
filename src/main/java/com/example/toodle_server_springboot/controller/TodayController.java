@@ -36,12 +36,13 @@ public class TodayController {
     @GetMapping
     @LogCreateRequest(requestURL = "/api/v1/today", requestMethod = HttpMethod.GET)
     public ResponseEntity<TodayResponse> todayResponse(
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+        @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         var projectDtoList = projectService.findAllProject(userPrincipal.toDto());
         var projectResponse = ProjectResponse.of(projectDtoList);
         var postItDtoList = postItService.getAllPostIt(userPrincipal.toDto());
-        var todayResponse = TodayResponse.of(projectResponse, TodayPostItResponse.of(postItDtoList));
+        var todayResponse = TodayResponse.of(projectResponse,
+            TodayPostItResponse.of(postItDtoList));
         return ResponseEntity.ok(todayResponse);
     }
 }

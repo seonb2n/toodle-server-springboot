@@ -2,15 +2,20 @@ package com.example.toodle_server_springboot.domain.postIt;
 
 import com.example.toodle_server_springboot.domain.BaseEntity;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
+import java.util.Objects;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
-
-import javax.persistence.*;
-import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
@@ -55,7 +60,8 @@ public class PostItCategory extends BaseEntity {
         return new PostItCategory(title, userAccount);
     }
 
-    public static PostItCategory of(UUID postITCategoryClientId, String title, UserAccount userAccount) {
+    public static PostItCategory of(UUID postITCategoryClientId, String title,
+        UserAccount userAccount) {
         PostItCategory postItCategory = new PostItCategory(title, userAccount);
         postItCategory.setPostItCategoryClientId(postITCategoryClientId);
         return postItCategory;
@@ -63,10 +69,15 @@ public class PostItCategory extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PostItCategory that = (PostItCategory) o;
-        return Objects.equals(postItCategoryClientId, that.postItCategoryClientId) && Objects.equals(title, that.title);
+        return Objects.equals(postItCategoryClientId, that.postItCategoryClientId)
+            && Objects.equals(title, that.title);
     }
 
     @Override

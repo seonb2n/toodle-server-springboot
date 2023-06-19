@@ -3,19 +3,23 @@ package com.example.toodle_server_springboot.domain.project.task.action;
 import com.example.toodle_server_springboot.domain.BaseEntity;
 import com.example.toodle_server_springboot.domain.project.task.Task;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
 /**
- * 행동의 단위
- * 해야할 일과 기한, 완료 여부로 구성되어 있다.
+ * 행동의 단위 해야할 일과 기한, 완료 여부로 구성되어 있다.
  */
 @Getter
 @ToString(callSuper = true)
@@ -52,9 +56,11 @@ public class Action extends BaseEntity {
     private boolean isDone;
 
 
-    protected Action() {}
+    protected Action() {
+    }
 
-    private Action(UserAccount userAccount, Task task, String content, LocalDateTime dueDate, boolean isDone) {
+    private Action(UserAccount userAccount, Task task, String content, LocalDateTime dueDate,
+        boolean isDone) {
         this.userAccount = userAccount;
         this.task = task;
         this.content = content;
@@ -62,8 +68,9 @@ public class Action extends BaseEntity {
         this.isDone = isDone;
     }
 
-    public static Action of(UserAccount userAccount, Task task, String content, LocalDateTime dueDate, boolean isDone) {
-        return new Action(userAccount, task, content,  dueDate, isDone);
+    public static Action of(UserAccount userAccount, Task task, String content,
+        LocalDateTime dueDate, boolean isDone) {
+        return new Action(userAccount, task, content, dueDate, isDone);
     }
 
     public void update(String content, LocalDateTime dueDate, boolean isDone) {
@@ -74,10 +81,15 @@ public class Action extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Action action = (Action) o;
-        return isDone == action.isDone && Objects.equals(content, action.content) && Objects.equals(dueDate, action.dueDate);
+        return isDone == action.isDone && Objects.equals(content, action.content) && Objects.equals(
+            dueDate, action.dueDate);
     }
 
     @Override

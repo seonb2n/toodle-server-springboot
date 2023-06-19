@@ -32,36 +32,36 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtRequestFilter jwtRequestFilter,
-            APIRequestLimitFilter apiRequestLimitFilter,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService,
-            OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-            OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
-            ) throws Exception {
+        HttpSecurity http,
+        JwtRequestFilter jwtRequestFilter,
+        APIRequestLimitFilter apiRequestLimitFilter,
+        JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService,
+        OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+        OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler
+    ) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .antMatchers("/api/v1/users/**").permitAll()
-                        .antMatchers("/").permitAll()
-                        .anyRequest().authenticated()
-                )
-                // 간편 로그인 기능 사용을 위한 설정
-                .oauth2Login(oAuth -> oAuth
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .defaultSuccessUrl("/{login-success-url}")
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .failureHandler(oAuth2AuthenticationFailureHandler)
-                )
-                .cors().configurationSource(corsConfigurationSource())
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .csrf().disable()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(apiRequestLimitFilter, JwtRequestFilter.class)
-                .build();
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .antMatchers("/api/v1/users/**").permitAll()
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated()
+            )
+            // 간편 로그인 기능 사용을 위한 설정
+            .oauth2Login(oAuth -> oAuth
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                .defaultSuccessUrl("/{login-success-url}")
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
+            )
+            .cors().configurationSource(corsConfigurationSource())
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .and()
+            .csrf().disable()
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(apiRequestLimitFilter, JwtRequestFilter.class)
+            .build();
     }
 
     @Bean
@@ -78,7 +78,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -88,31 +89,32 @@ public class SecurityConfig {
     }
 
     /**
-     * OAuth2 에서 사용될 userService
-     * OAuth2 로부터 가져온 정보를 바탕으로 우리 db 에 사용자 등록을 한다.
+     * OAuth2 에서 사용될 userService OAuth2 로부터 가져온 정보를 바탕으로 우리 db 에 사용자 등록을 한다.
+     *
      * @param userAccountService
      * @param passwordEncoder
      * @return
      */
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(
-            UserAccountService userAccountService,
-            PasswordEncoder passwordEncoder
+        UserAccountService userAccountService,
+        PasswordEncoder passwordEncoder
     ) {
         final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
         return userRequest -> {
             OAuth2User oAuth2User = delegate.loadUser(userRequest);
-            NaverOauth2Response naverOauth2Response = NaverOauth2Response.from(oAuth2User.getAttributes());
+            NaverOauth2Response naverOauth2Response = NaverOauth2Response.from(
+                oAuth2User.getAttributes());
             String userEmail = "NAVER_" + naverOauth2Response.email();
             String dummyPassword = passwordEncoder.encode("{bcrypt}dummy");
             return userAccountService.findUserAccountDto(userEmail)
-                    .map(UserPrincipal::from)
-                    .orElseGet(() ->
-                            UserPrincipal.from(userAccountService.registerUser(
-                                    userEmail,
-                                    dummyPassword,
-                                    naverOauth2Response.nickname()
-                            )));
+                .map(UserPrincipal::from)
+                .orElseGet(() ->
+                    UserPrincipal.from(userAccountService.registerUser(
+                        userEmail,
+                        dummyPassword,
+                        naverOauth2Response.nickname()
+                    )));
         };
     }
 }

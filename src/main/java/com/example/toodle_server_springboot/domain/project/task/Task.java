@@ -4,21 +4,29 @@ import com.example.toodle_server_springboot.domain.BaseEntity;
 import com.example.toodle_server_springboot.domain.project.Project;
 import com.example.toodle_server_springboot.domain.project.task.action.Action;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
- * 업무의 최소 단위
- * 여러 Action 으로 구성되어 있다.
+ * 업무의 최소 단위 여러 Action 으로 구성되어 있다.
  */
 @Getter
 @ToString(callSuper = true)
@@ -62,34 +70,45 @@ public class Task extends BaseEntity {
         actionSet.add(action);
     }
 
-    protected Task() {}
+    protected Task() {
+    }
 
-    private Task(UserAccount userAccount, Project project, String content, IMPORTNACE importnace, LocalDateTime startAt, LocalDateTime endAt) {
+    private Task(UserAccount userAccount, Project project, String content, IMPORTNACE importnace,
+        LocalDateTime startAt, LocalDateTime endAt) {
         this.userAccount = userAccount;
-        this.project =  project;
+        this.project = project;
         this.content = content;
         this.importnace = importnace;
         this.startAt = startAt;
         this.endAt = endAt;
     }
 
-    public static Task of (UserAccount userAccount, Project project, String content, IMPORTNACE importnace) {
+    public static Task of(UserAccount userAccount, Project project, String content,
+        IMPORTNACE importnace) {
         return new Task(userAccount, project, content, importnace, null, null);
     }
 
-    public static Task of (UserAccount userAccount, Project project, String content, IMPORTNACE importnace, LocalDateTime startAt, LocalDateTime endAt) {
+    public static Task of(UserAccount userAccount, Project project, String content,
+        IMPORTNACE importnace, LocalDateTime startAt, LocalDateTime endAt) {
         return new Task(userAccount, project, content, importnace, startAt, endAt);
     }
+
     public void update(String content) {
         this.content = content;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Task task = (Task) o;
-        return Objects.equals(userAccount, task.userAccount) && Objects.equals(project, task.project) && Objects.equals(content, task.content) && Objects.equals(actionSet, task.actionSet);
+        return Objects.equals(userAccount, task.userAccount) && Objects.equals(project,
+            task.project) && Objects.equals(content, task.content) && Objects.equals(actionSet,
+            task.actionSet);
     }
 
     @Override

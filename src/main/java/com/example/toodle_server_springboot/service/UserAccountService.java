@@ -9,6 +9,8 @@ import com.example.toodle_server_springboot.exception.UserEmailSendFailException
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
 import com.example.toodle_server_springboot.util.MailBodyForm;
 import com.example.toodle_server_springboot.util.TmpPasswordGenerator;
+import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +18,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.mail.internet.MimeMessage;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -88,12 +87,13 @@ public class UserAccountService {
 
     /**
      * 가입된 전적이 있는 회원의 경우, 비밀번호 변경 이메일을 보낸다.
+     *
      * @param userEmail
      */
     @Transactional
     public void sendEmailToUser(String userEmail) {
         UserAccount userAccount = userAccountRepository.findUserAccountByEmail(userEmail)
-                .orElseThrow(UserEmailNotFoundException::new);
+            .orElseThrow(UserEmailNotFoundException::new);
 
         // 1. 사용자 계정을 임시 비밀번호로 바꾼 뒤, 해당 계정의 상태를 임시 비번 상태로 바꾼다.
         String tmpPassword = tmpPasswordGenerator.generatePassword(10);
@@ -109,7 +109,8 @@ public class UserAccountService {
             mimeMessageHelper.setTo(userEmail);
             mimeMessageHelper.setSubject("[TOODLE] 임시 비밀번호 안내");
             StringBuilder body = new StringBuilder();
-            body.append(new MailBodyForm(userAccount.getNickname(), "비밀번호가 변경됐습니다. [" + userAccount.getPassword().substring(6) + "] \n 재로그인 부탁드립니다."));
+            body.append(new MailBodyForm(userAccount.getNickname(),
+                "비밀번호가 변경됐습니다. [" + userAccount.getPassword().substring(6) + "] \n 재로그인 부탁드립니다."));
             mimeMessageHelper.setText(body.toString(), true);
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {

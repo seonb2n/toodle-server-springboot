@@ -17,14 +17,16 @@ public class UserRequestLogService {
      * 생성된 로그를 서버로 저장하는 메서드
      */
     public void createLog(
-            String userEmail,
-            String requestURL,
-            HttpMethod requestMethod,
-            HttpStatus responseCode,
-            String userRequestData,
-            String userResponseData
+        String userEmail,
+        String requestURL,
+        HttpMethod requestMethod,
+        HttpStatus responseCode,
+        String userRequestData,
+        String userResponseData
     ) {
-        userRequestLogRepository.save(UserRequestLog.of(userEmail, requestURL, requestMethod, responseCode, userRequestData, userResponseData));
+        userRequestLogRepository.save(
+            UserRequestLog.of(userEmail, requestURL, requestMethod, responseCode, userRequestData,
+                userResponseData));
     }
 
 }

@@ -9,11 +9,10 @@ import com.example.toodle_server_springboot.dto.postit.PostItDto;
 import com.example.toodle_server_springboot.repository.PostItCategoryRepository;
 import com.example.toodle_server_springboot.repository.PostItRepository;
 import com.example.toodle_server_springboot.repository.UserAccountRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +44,8 @@ public class PostItService {
      */
     @Transactional(readOnly = true)
     public List<PostItDto> getAllPostIt(UserAccountDto userAccountDto) {
-        return postItRepository.findAllByUserAccount_Email(userAccountDto.email()).stream().map(PostItDto::from).toList();
+        return postItRepository.findAllByUserAccount_Email(userAccountDto.email()).stream()
+            .map(PostItDto::from).toList();
     }
 
     /**
@@ -56,7 +56,8 @@ public class PostItService {
      */
     @Transactional(readOnly = true)
     public List<PostItCategoryDto> getAllPostItCategory(UserAccountDto userAccountDto) {
-        return postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(userAccountDto.email()).stream().map(PostItCategoryDto::from).toList();
+        return postItCategoryRepository.findAllByUserAccount_EmailAndDeletedFalse(
+            userAccountDto.email()).stream().map(PostItCategoryDto::from).toList();
     }
 
     /**
@@ -68,22 +69,28 @@ public class PostItService {
      * @return
      */
     public List<PostItDto> updatePostIt(
-            List<PostItCategoryDto> postItCategoryDtoList,
-            List<PostItDto> postItDtoLIst,
-            UserAccountDto userAccountDto) {
-        var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email()).orElseThrow();
+        List<PostItCategoryDto> postItCategoryDtoList,
+        List<PostItDto> postItDtoLIst,
+        UserAccountDto userAccountDto) {
+        var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email())
+            .orElseThrow();
         // 카테고리 생성
         var updatedCategoryList = postItCategoryDtoList.stream().map(it ->
-                postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, it.postItCategoryClientId())
-                        .orElse(PostItCategory.of(it.postItCategoryClientId(), it.title(), userAccount))).toList();
+                postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount,
+                        it.postItCategoryClientId())
+                    .orElse(PostItCategory.of(it.postItCategoryClientId(), it.title(), userAccount)))
+            .toList();
         postItCategoryRepository.saveAll(updatedCategoryList);
 
         // 포스트잇이 생성되는 경우에는 생성, 업데이트인 경우에는 업데이트
         var updatePostItList = postItDtoLIst.stream().map(it -> {
             var postItCategoryClientId = it.categoryDto().postItCategoryClientId();
-            var category = postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(userAccount, postItCategoryClientId).orElseThrow();
-            var foundPostIt = postItRepository.findByUserAccountAndPostItClientId(userAccount, it.postItClientId())
-                    .orElse(PostIt.of(it.postItClientId(), it.content(), category, userAccount, it.isDone()));
+            var category = postItCategoryRepository.findByUserAccountAndPostItCategoryClientId(
+                userAccount, postItCategoryClientId).orElseThrow();
+            var foundPostIt = postItRepository.findByUserAccountAndPostItClientId(userAccount,
+                    it.postItClientId())
+                .orElse(PostIt.of(it.postItClientId(), it.content(), category, userAccount,
+                    it.isDone()));
             foundPostIt.update(it);
             return foundPostIt;
         }).toList();
