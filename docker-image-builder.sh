@@ -8,12 +8,14 @@ docker rmi $(docker images -q)
 
 #backend build
 echo ">>> BACKEND BUILD"
-docker buildx build --platform linux/arm64 --tag 626ksb/toodle_server .
+#docker buildx build --platform linux/arm64 --tag 626ksb/toodle_server .
+docker build --tag 626ksb/toodle_server .
 docker push 626ksb/toodle_server
 
 #frontend build
 echo ">>> FRONTEND BUILD"
 cd C:/Users/seonbin/WebstormProjects/toodle_react
 npm run build
-docker buildx build --platform linux/arm64 --tag 626ksb/toodle_frontend .
+#docker buildx build --platform linux/arm64 --tag 626ksb/toodle_frontend .
+docker build --tag 626ksb/toodle_frontend .
 docker push 626ksb/toodle_frontend

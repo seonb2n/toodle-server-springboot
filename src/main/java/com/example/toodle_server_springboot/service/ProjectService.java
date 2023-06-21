@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class ProjectService {
     private final UserAccountRepository userAccountRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "projectCache", key = "#userAccountDto.email")
     public List<ProjectDto> findAllProject(UserAccountDto userAccountDto) {
         var userAccount = userAccountRepository.findUserAccountByEmail(userAccountDto.email())
             .orElseThrow();
@@ -40,6 +43,7 @@ public class ProjectService {
      * 새로운 프로젝트를 서버에 등록하는 메서드
      */
     @Transactional
+    @CacheEvict(value = "projectCache", key = "#userAccount.email")
     public ProjectDto registerProject(UserAccount userAccount, ProjectDto projectDto) {
         Project project = projectDto.toEntity(userAccount);
         var savedProject = projectRepository.save(project);
@@ -52,6 +56,7 @@ public class ProjectService {
      * 기존에 존재하던 프로젝트를 수정하는 메서드
      */
     @Transactional
+    @CacheEvict(value = "projectCache", key = "#userAccount.email")
     public ProjectDto updateProject(UserAccount userAccount, ProjectDto projectDto) {
         Project originalProject = projectRepository.findById(projectDto.projectId()).orElseThrow();
         projectDto.taskDtoSet()
@@ -83,6 +88,7 @@ public class ProjectService {
      * 기존에 존재하던 프로젝트를 삭제하는 메서드
      */
     @Transactional
+    @CacheEvict(value = "projectCache", key = "#userAccount.email")
     public void deleteProject(UserAccount userAccount, UUID projectId) {
         // 프로젝트의 소유주와 삭제 요청주가 동일한지 확인해야 함
         var projectOwner = projectRepository.findById(projectId).orElseThrow().getUserAccount();
