@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -24,7 +25,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @ToString(callSuper = true)
 @Entity
-@Table(name = "tb_action")
+@Table(name = "tb_action", indexes = {
+    @Index(name = "idx_action_id", columnList = "action_id")
+})
 public class Action extends BaseEntity {
 
     @Id

@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -20,7 +21,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @ToString(callSuper = true)
 @Entity
-@Table(name = "tb_postit")
+@Table(name = "tb_postit", indexes = {
+    @Index(name = "idx_postit_id", columnList = "postit_id")
+})
 public class PostIt extends BaseEntity {
 
     @Id

@@ -16,6 +16,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -31,7 +32,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @ToString(callSuper = true)
 @Entity
-@Table(name = "tb_task")
+@Table(name = "tb_task", indexes = {
+    @Index(name = "idx_task_id", columnList = "task_id")
+})
 public class Task extends BaseEntity {
 
     @Id

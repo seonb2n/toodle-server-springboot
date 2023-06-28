@@ -1,6 +1,6 @@
 package com.example.toodle_server_springboot.config;
 
-import com.example.toodle_server_springboot.domain.project.Project;
+import java.util.List;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -21,13 +21,13 @@ public class EhCacheConfig {
     public CacheManager ehcacheManager() {
         CachingProvider provider = Caching.getCachingProvider();
         CacheManager cacheManager = provider.getCacheManager();
-        MutableConfiguration<String, Project> configuration =
-            new MutableConfiguration<String, Project>()
-                .setTypes(String.class, Project.class)
+        MutableConfiguration<String, List> configuration =
+            new MutableConfiguration<String, List>()
+                .setTypes(String.class, List.class)
                 .setStoreByValue(false)
                 .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.ONE_MINUTE));
 
-        Cache<String, Project> cache = cacheManager.createCache("projectCache", configuration);
+        Cache<String, List> cache = cacheManager.createCache("projectCache", configuration);
         return cacheManager;
     }
 
