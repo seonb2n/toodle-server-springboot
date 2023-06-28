@@ -24,6 +24,11 @@ http://54.180.54.238:8300/login
 - 사용자가 호출한 API, 요청, 응답에 대한 DB 로깅
 - Redis 를 사용한 사용자 호출 API 제한 설정(1분당 동일 IP 로 10건)
 - ec2 volume 7GB -> 30GB 로 업데이트
+- Test Coverage 90% 이상 유지
+- JPA 사용
+- EhCache 로 자주 들어오는 요청에 대해서는 캐싱 처리
+- DB 인덱스 추가
+
 
 > 테스트용 로그인 아이디
 > ID : 626ksb@naver.com
