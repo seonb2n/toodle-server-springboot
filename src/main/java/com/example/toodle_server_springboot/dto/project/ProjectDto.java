@@ -3,6 +3,7 @@ package com.example.toodle_server_springboot.dto.project;
 import com.example.toodle_server_springboot.domain.project.Project;
 import com.example.toodle_server_springboot.domain.user.UserAccount;
 import com.example.toodle_server_springboot.dto.UserAccountDto;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,7 +14,7 @@ public record ProjectDto(
     String projectName,
     String projectColor,
     Set<TaskDto> taskDtoSet
-) {
+) implements Serializable {
 
     public static ProjectDto of(UUID projectId, UserAccountDto userAccountDto, String projectName,
         String projectColor, Set<TaskDto> taskDtoSet) {
